@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpyraZ | Official Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+:root{--bg:#07080d;--card:#0f1118;--card2:#161b24;--border:rgba(255,255,255,0.06);--orange:#ff8c00;--orange-glow:rgba(255,140,0,0.15);--text:#f1f5f9;--muted:#64748b;--green:#00cc88;--nav-h:64px;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent;}
+/* Fixed Mobile Overlap */
+body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:120px;}
+
+.top-header{display:flex;justify-content:space-between;align-items:center;padding:.75rem 1rem;background:rgba(7,8,13,0.97);backdrop-filter:blur(20px);position:sticky;top:0;z-index:100;border-bottom:1px solid var(--border);}
+.logo{font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:900;color:white;letter-spacing:-1px;}.logo span{color:var(--orange);}
+.header-actions{display:flex;gap:8px;align-items:center;}
+.login-pill{background:var(--orange);color:#000;padding:7px 16px;border-radius:50px;font-weight:800;font-size:.78rem;text-decoration:none;transition:.2s;}
+.login-pill:hover{transform:scale(1.05);}
+.user-pill{display:none;align-items:center;gap:7px;background:rgba(255,140,0,.1);border:1px solid rgba(255,140,0,.3);padding:5px 12px 5px 5px;border-radius:50px;}
+.logout-btn{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:5px 11px;border-radius:50px;font-weight:800;font-size:.72rem;cursor:pointer;margin-left:4px;transition:.2s;}
+.logout-btn:hover{background:rgba(239,68,68,.3);}
+.user-avatar{width:26px;height:26px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.75rem;color:#000;}
+.user-name{font-weight:800;font-size:.78rem;color:white;}
+
+/* HERO */
+.hero{margin:1rem;border-radius:24px;overflow:hidden;position:relative;background:linear-gradient(135deg,#0a0c14 0%,#1a0d00 100%);border:1px solid rgba(255,140,0,0.2);padding:2.2rem 1.3rem;}
+.hero-badge{display:inline-block;background:var(--orange);color:#000;padding:4px 13px;border-radius:50px;font-size:.68rem;font-weight:900;text-transform:uppercase;letter-spacing:1px;margin-bottom:.9rem;}
+.hero h1{font-family:'Outfit',sans-serif;font-size:2.6rem;font-weight:900;line-height:1.05;margin-bottom:.7rem;}
+.hero h1 span{color:var(--orange);}
+.hero p{color:var(--muted);font-size:.88rem;margin-bottom:1.3rem;line-height:1.6;}
+.hero-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.btn-o{background:var(--orange);color:#000;padding:10px 18px;border-radius:13px;font-weight:800;font-size:.83rem;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:.2s;}
+.btn-o:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(255,140,0,.3);}
+.btn-g{background:rgba(255,255,255,.05);color:white;padding:10px 18px;border-radius:13px;font-weight:800;font-size:.83rem;text-decoration:none;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--border);transition:.2s;}
+.btn-g:hover{background:rgba(255,255,255,.1);}
+.hero-glow{position:absolute;top:-50px;right:-50px;width:220px;height:220px;background:radial-gradient(circle,rgba(255,140,0,.13) 0%,transparent 70%);pointer-events:none;}
+
+/* VIDEO WATCH BANNER */
+.video-watch-banner{margin:0 1rem 1rem;background:linear-gradient(135deg,rgba(255,0,0,.07),rgba(255,80,0,.05));border:1px solid rgba(255,60,60,.25);border-radius:20px;padding:1.1rem 1.2rem;display:flex;align-items:center;gap:12px;}
+.vwb-icon{width:46px;height:46px;background:linear-gradient(135deg,#ff0000,#cc0000);border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.vwb-icon i{color:#fff;font-size:1.3rem;}
+.vwb-text{flex:1;}
+.vwb-text strong{display:block;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:900;margin-bottom:2px;}
+.vwb-text p{font-size:.78rem;color:var(--muted);line-height:1.45;}
+.vwb-btn{background:#ff0000;color:#fff;padding:8px 16px;border-radius:50px;font-size:.75rem;font-weight:800;text-decoration:none;white-space:nowrap;display:flex;align-items:center;gap:5px;flex-shrink:0;transition:.2s;}
+.vwb-btn:hover{background:#cc0000;transform:scale(1.04);}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 1rem 1rem;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1rem;text-align:center;}
+.stat-num{font-family:'Outfit',sans-serif;font-size:1.7rem;font-weight:900;color:var(--orange);}
+.stat-label{font-size:.68rem;color:var(--muted);font-weight:700;text-transform:uppercase;margin-top:3px;}
+
+/* HOW IT WORKS */
+.hiw-card{margin:0 1rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.2rem;}
+.hiw-card h3{font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:900;margin-bottom:.9rem;display:flex;align-items:center;gap:7px;}
+.hiw-card h3 i{color:var(--orange);}
+.hiw-steps{display:flex;flex-direction:column;gap:.6rem;}
+.hiw-step{display:flex;align-items:flex-start;gap:10px;}
+.step-num{width:26px;height:26px;background:var(--orange);color:#000;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.75rem;flex-shrink:0;}
+.step-text strong{display:block;font-size:.84rem;margin-bottom:1px;}
+.step-text span{font-size:.76rem;color:var(--muted);}
+
+/* SECTION */
+.section{margin:0 1rem 1rem;}
+.section-title{font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:.9rem;display:flex;align-items:center;gap:7px;}
+.section-title i{color:var(--orange);}
+
+/* ABOUT */
+.about-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.3rem;}
+.about-top{display:flex;align-items:center;gap:.9rem;margin-bottom:1rem;}
+.about-avatar{width:54px;height:54px;background:linear-gradient(135deg,var(--orange),#ff4500);border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-size:1.4rem;font-weight:900;color:#000;flex-shrink:0;}
+.about-name{font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:900;}
+.about-tag{font-size:.73rem;color:var(--muted);margin-top:2px;}
+.about-bio{color:var(--muted);font-size:.85rem;line-height:1.7;}
+.about-bio strong{color:var(--text);}
+.about-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:.9rem;}
+.chip{background:rgba(255,140,0,.1);border:1px solid rgba(255,140,0,.2);color:var(--orange);padding:4px 11px;border-radius:50px;font-size:.72rem;font-weight:700;}
+
+/* QUICK NAV */
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.quick-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.1rem;text-decoration:none;color:var(--text);display:flex;flex-direction:column;gap:7px;transition:.2s;position:relative;overflow:hidden;}
+.quick-card:hover{border-color:var(--orange);transform:translateY(-2px);}
+.quick-card i{font-size:1.4rem;color:var(--orange);}
+.quick-card-name{font-weight:800;font-size:.88rem;}
+.quick-card-desc{font-size:.73rem;color:var(--muted);}
+.quick-card .arrow{position:absolute;top:.9rem;right:.9rem;color:var(--muted);font-size:.78rem;}
+
+/* DELIVERY NOTICE */
+.delivery-box{background:linear-gradient(135deg,rgba(255,140,0,.04),rgba(255,140,0,.1));border:1px solid rgba(255,140,0,.22);border-radius:18px;padding:1.1rem;display:flex;gap:11px;align-items:flex-start;}
+.delivery-box i{color:var(--orange);font-size:1.2rem;margin-top:2px;}
+.delivery-box strong{display:block;font-size:.88rem;margin-bottom:3px;}
+.delivery-box p{font-size:.78rem;color:var(--muted);line-height:1.5;}
+
+/* BOTTOM NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);background:rgba(10,11,18,0.98);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;z-index:200;padding:0 4px;}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border-radius:12px;text-decoration:none;color:var(--muted);transition:.2s;flex:1;max-width:68px;}
+.nav-btn i{font-size:1.1rem;}
+.nav-btn span{font-size:.56rem;font-weight:700;text-transform:uppercase;}
+.nav-btn.active{color:var(--orange);}
+.nav-btn.active i{filter:drop-shadow(0 0 6px rgba(255,140,0,.5));}
+
+@media(min-width:768px){body{max-width:900px;margin:0 auto;}.hero h1{font-size:3.2rem;}.quick-grid{grid-template-columns:repeat(4,1fr);}}
+</style>
+</head>
+<body>
+
+<header class="top-header">
+  <div class="logo">SPYRA<span>Z</span></div>
+  <div class="header-actions">
+    <a href="login.html" class="login-pill" id="loginBtn"><i class="fas fa-user"></i> Login</a>
+    <div class="user-pill" id="userPill">
+      <div class="user-avatar" id="uAvatar">S</div>
+      <span class="user-name" id="uName">SpyraZ</span>
+      <button class="logout-btn" onclick="doLogout()">⏻</button>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-badge"><i class="fas fa-star"></i> Official Hub</div>
+  <h1>Master Your<br><span>Blox Fruits</span><br>Legacy</h1>
+  <p>SpyraZ's official community — daily shorts, giveaways, trading & more.</p>
+  <div class="hero-btns">
+    <a href="https://youtube.com/@spyraz" target="_blank" class="btn-o"><i class="fab fa-youtube"></i> YouTube</a>
+    <a href="giveaway.html" class="btn-g"><i class="fas fa-gift"></i> Giveaway</a>
+  </div>
+</div>
+
+<div class="video-watch-banner">
+  <div class="vwb-icon"><i class="fab fa-youtube"></i></div>
+  <div class="vwb-text">
+    <strong>🎬 Watch to Understand Everything!</strong>
+    <p>New here? Watch SpyraZ's guide video — it explains how to earn coins, enter giveaways, find secret codes, spin fruits, and use every feature on this site.</p>
+  </div>
+  <a href="https://yt/spy" target="_blank" rel="noopener" class="vwb-btn"><i class="fab fa-youtube"></i> Watch</a>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-num">Daily</div>
+    <div class="stat-label">Shorts</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" id="memberCount">—</div>
+    <div class="stat-label">Members</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num">48h</div>
+    <div class="stat-label">Delivery</div>
+  </div>
+</div>
+
+<div class="hiw-card">
+  <h3><i class="fas fa-circle-info"></i> How SpyraZ Hub Works</h3>
+  <div class="hiw-steps">
+    <div class="hiw-step"><div class="step-num">1</div><div class="step-text"><strong>Create a free account</strong><span>Sign up with your Roblox ID to get 100 starting coins.</span></div></div>
+    <div class="hiw-step"><div class="step-num">2</div><div class="step-text"><strong>Watch daily YouTube Shorts</strong><span>Hidden codes inside videos give you free coins, fruits, and spins.</span></div></div>
+    <div class="hiw-step"><div class="step-num">3</div><div class="step-text"><strong>Spin to win fruits</strong><span>Spend coins for a spin, or get a free spin every hour — win rare fruits!</span></div></div>
+    <div class="hiw-step"><div class="step-num">4</div><div class="step-text"><strong>Enter giveaways</strong><span>Find BOTH the Video Code and Secret Code in SpyraZ's video and submit to win big prizes.</span></div></div>
+    <div class="hiw-step"><div class="step-num">5</div><div class="step-text"><strong>Trade, Buy & Sell</strong><span>Use the Market to buy fruits with coins. Sell your fruits for 90% coin value. Trade 1v1.</span></div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title"><i class="fas fa-user-circle"></i> About Ashwani</div>
+  <div class="about-card">
+    <div class="about-top">
+      <div class="about-avatar">A</div>
+      <div>
+        <div class="about-name">Ashwani (SpyraZ)</div>
+        <div class="about-tag">15 y/o · New Delhi · @SpyraZ on YT</div>
+      </div>
+    </div>
+    <div class="about-bio">
+      Welcome! I'm <strong>Ashwani</strong>, born <strong>29 December 2010</strong> in Varanasi, U.P. — now building this community from <strong>New Delhi</strong>.<br><br>
+      I upload a <strong>YouTube Short daily</strong> about Blox Fruits. My mission is to make my <strong>parents proud</strong> by growing this platform and bringing the community together.
+    </div>
+    <div class="about-chips">
+      <div class="chip"><i class="fas fa-gamepad"></i> Blox Fruits</div>
+      <div class="chip"><i class="fab fa-youtube"></i> Daily Shorts</div>
+      <div class="chip"><i class="fas fa-gift"></i> Monthly Giveaways</div>
+      <div class="chip"><i class="fas fa-map-marker-alt"></i> New Delhi</div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title"><i class="fas fa-grid-2"></i> Quick Access</div>
+  <div class="quick-grid">
+    <a href="giveaway.html" class="quick-card"><i class="fas fa-gift"></i><div class="quick-card-name">Giveaway</div><div class="quick-card-desc">Enter monthly drops</div><i class="fas fa-chevron-right arrow"></i></a>
+    <a href="spin.html" class="quick-card"><i class="fas fa-rotate"></i><div class="quick-card-name">Spin</div><div class="quick-card-desc">Win free fruits</div><i class="fas fa-chevron-right arrow"></i></a>
+    <a href="market.html" class="quick-card"><i class="fas fa-shop"></i><div class="quick-card-name">Market</div><div class="quick-card-desc">Buy, gift & sell</div><i class="fas fa-chevron-right arrow"></i></a>
+    <a href="chat.html" class="quick-card"><i class="fas fa-comment-dots"></i><div class="quick-card-name">Chat</div><div class="quick-card-desc">Community talk</div><i class="fas fa-chevron-right arrow"></i></a>
+    <a href="trade.html" class="quick-card"><i class="fas fa-repeat"></i><div class="quick-card-name">Trade</div><div class="quick-card-desc">1v1 trading</div><i class="fas fa-chevron-right arrow"></i></a>
+    <a href="sell.html" class="quick-card"><i class="fas fa-sack-dollar"></i><div class="quick-card-name">Sell</div><div class="quick-card-desc">List your fruits</div><i class="fas fa-chevron-right arrow"></i></a>
+  </div>
+</div>
+
+<div class="section">
+  <div class="delivery-box">
+    <i class="fas fa-shield-check"></i>
+    <div>
+      <strong>Verified 48-Hour Delivery</strong>
+      <p>All Market & Sell orders are handled personally by SpyraZ admins inside Blox Fruits within 48 hours. Safe, trusted, and always verified.</p>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-btn active"><i class="fas fa-house"></i><span>Home</span></a>
+  <a href="giveaway.html" class="nav-btn"><i class="fas fa-gift"></i><span>Win</span></a>
+  <a href="spin.html" class="nav-btn"><i class="fas fa-rotate"></i><span>Spin</span></a>
+  <a href="chat.html" class="nav-btn"><i class="fas fa-comment-dots"></i><span>Chat</span></a>
+  <a href="market.html" class="nav-btn"><i class="fas fa-shop"></i><span>Market</span></a>
+  <a href="trade.html" class="nav-btn"><i class="fas fa-repeat"></i><span>Trade</span></a>
+  <a href="sell.html" class="nav-btn"><i class="fas fa-sack-dollar"></i><span>Sell</span></a>
+</nav>
+
+<script>
+(function(){
+  var CDNS=[
+    ['https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js','https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js','https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js'],
+    ['https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/app.min.js','https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/auth.min.js','https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/database.min.js'],
+    ['https://unpkg.com/firebase@9.23.0/compat/app.js','https://unpkg.com/firebase@9.23.0/compat/auth.js','https://unpkg.com/firebase@9.23.0/compat/database.js']
+  ];
+  function ls(u){return new Promise(function(r,j){var s=document.createElement('script');s.src=u;s.onload=r;s.onerror=j;document.head.appendChild(s);});}
+  function lc(i){if(i>=CDNS.length)return;ls(CDNS[i][0]).then(function(){return ls(CDNS[i][1]);}).then(function(){return ls(CDNS[i][2]);}).then(function(){window._fbReady=true;document.dispatchEvent(new Event('fbReady'));}).catch(function(){lc(i+1);});}
+  lc(0);
+})();
+</script>
+<script>
+function bootApp(){
+  var cfg={apiKey:"AIzaSyBvRRGp7Di6QK6LvbLIl8jyalkYmUkYISw",authDomain:"spyraz-4d24e.firebaseapp.com",databaseURL:"https://spyraz-4d24e-default-rtdb.firebaseio.com/",projectId:"spyraz-4d24e",storageBucket:"spyraz-4d24e.firebasestorage.app",messagingSenderId:"533558439070",appId:"1:533558439070:web:382971879027a158ad9f8f"};
+  firebase.initializeApp(cfg);
+  var auth=firebase.auth(), db=firebase.database();
+  auth.onAuthStateChanged(function(user){
+    if(user){
+      document.getElementById('loginBtn').style.display='none';
+      document.getElementById('userPill').style.display='flex';
+      db.ref('users/'+user.uid).on('value',function(s){
+        if(s.exists()){var d=s.val();document.getElementById('uName').innerText=d.username||'User';document.getElementById('uAvatar').innerText=(d.username||'U').charAt(0).toUpperCase();}
+      });
+    }else{document.getElementById('loginBtn').style.display='flex';document.getElementById('userPill').style.display='none';}
+  });
+  db.ref('users').once('value',function(s){
+    var c=s.val()?Object.keys(s.val()).length:0;
+    document.getElementById('memberCount').innerText=c||'—';
+    // Also update the counter node for efficiency
+    if(c>0) db.ref('stats/memberCount').set(c);
+  });
+}
+if(window._fbReady){bootApp();}else{document.addEventListener('fbReady',bootApp);}
+function doLogout(){firebase.auth().signOut().then(function(){window.location.href='login.html';});}
+</script>
+</body>
+</html>

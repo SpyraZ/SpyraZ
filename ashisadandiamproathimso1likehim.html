@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpyraZ Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+:root{
+  --bg:#04050a;--card:#0b0d14;--card2:#111520;--border:rgba(255,255,255,0.07);
+  --orange:#ff8c00;--og:rgba(255,140,0,0.1);--text:#f1f5f9;--muted:#64748b;
+  --green:#00cc88;--red:#ef4444;--blue:#2f9fff;--purple:#b44dff;
+  --spy:#ffaa00;--mythical:#ff0055;--legendary:#b44dff;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;}
+body{background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* LOGIN SCREEN */
+#loginScreen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1.5rem;}
+.lcard{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:2.5rem;width:100%;max-width:380px;text-align:center;}
+.lcard .badge{font-size:3rem;margin-bottom:1rem;display:block;}
+.lcard h2{font-family:'Outfit',sans-serif;font-size:1.6rem;font-weight:900;margin-bottom:.3rem;}
+.lcard p{color:var(--muted);font-size:.85rem;margin-bottom:2rem;}
+.lcard input{width:100%;background:rgba(0,0,0,.5);border:1.5px solid var(--border);border-radius:12px;padding:13px 15px;color:var(--text);font-size:.95rem;outline:none;margin-bottom:1rem;transition:.2s;}
+.lcard input:focus{border-color:var(--orange);}
+.lcard button{width:100%;padding:14px;background:var(--orange);color:#000;border:none;border-radius:12px;font-weight:900;font-size:1rem;cursor:pointer;}
+.err-msg{color:var(--red);font-size:.82rem;margin-top:.5rem;display:none;}
+
+/* ADMIN LAYOUT */
+#adminPanel{display:none;}
+.admin-hdr{background:var(--card);border-bottom:1px solid var(--border);padding:.8rem 1.2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+.admin-hdr h1{font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:900;}<br>.admin-hdr h1 span{color:var(--orange);}
+.logout-btn{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.3);padding:6px 14px;border-radius:50px;font-size:.75rem;font-weight:800;cursor:pointer;}
+
+/* NAV TABS */
+.nav-tabs{display:flex;overflow-x:auto;background:var(--card2);border-bottom:1px solid var(--border);padding:0 .5rem;gap:4px;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.ntab{padding:12px 16px;border:none;background:none;color:var(--muted);font-weight:800;font-size:.78rem;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;border-bottom:2px solid transparent;transition:.2s;}
+.ntab.on{color:var(--orange);border-bottom-color:var(--orange);}
+
+/* PANELS */
+.panel{display:none;padding:1.2rem;max-width:1000px;margin:0 auto;}
+.panel.on{display:block;}
+.panel-title{font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:900;margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
+.panel-title i{color:var(--orange);}
+
+/* STATS GRID */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:1.2rem;}
+.scard{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.2rem;text-align:center;}
+.scard .snum{font-family:'Outfit',sans-serif;font-size:1.8rem;font-weight:900;color:var(--orange);}
+.scard .slbl{font-size:.72rem;color:var(--muted);text-transform:uppercase;font-weight:700;margin-top:4px;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.2rem;margin-bottom:1rem;}
+.card h4{font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:900;margin-bottom:1rem;display:flex;align-items:center;gap:6px;}
+.card h4 i{color:var(--orange);}
+
+/* FORM ELEMENTS */
+.field{margin-bottom:.9rem;}
+.field label{display:block;font-size:.68rem;font-weight:800;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.field input,.field select,.field textarea{width:100%;background:rgba(0,0,0,.4);border:1.5px solid var(--border);border-radius:10px;padding:11px 13px;color:var(--text);font-size:.88rem;outline:none;transition:.2s;font-family:inherit;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--orange);}
+.field select option{background:#0b0d14;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+.btn{padding:10px 20px;border:none;border-radius:10px;font-weight:800;font-size:.82rem;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:6px;}
+.btn:hover{transform:translateY(-1px);}
+.btn-o{background:var(--orange);color:#000;}
+.btn-g{background:rgba(0,204,136,.15);color:var(--green);border:1px solid rgba(0,204,136,.3);}
+.btn-r{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3);}
+.btn-b{background:rgba(47,159,255,.15);color:var(--blue);border:1px solid rgba(47,159,255,.3);}
+.btn-w{width:100%;padding:12px;background:var(--orange);color:#000;border:none;border-radius:12px;font-weight:900;font-size:.9rem;cursor:pointer;transition:.2s;}
+.btn-w:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(255,140,0,.3);}
+.btn-w:disabled{background:#1e293b;color:var(--muted);transform:none;box-shadow:none;cursor:not-allowed;}
+
+/* TABLE */
+.table-wrap{overflow-x:auto;border-radius:14px;border:1px solid var(--border);}
+table{width:100%;border-collapse:collapse;min-width:600px;}
+th{background:var(--card2);padding:10px 14px;text-align:left;font-size:.72rem;text-transform:uppercase;color:var(--muted);font-weight:800;border-bottom:1px solid var(--border);}
+td{padding:10px 14px;font-size:.82rem;border-bottom:1px solid rgba(255,255,255,.03);}
+tr:last-child td{border:none;}
+tr:hover td{background:rgba(255,255,255,.015);}
+
+/* STATUS PILLS */
+.pill{padding:3px 10px;border-radius:50px;font-size:.68rem;font-weight:800;text-transform:uppercase;}
+.p-pending{background:rgba(255,140,0,.15);color:var(--orange);}
+.p-done{background:rgba(0,204,136,.15);color:var(--green);}
+.p-winner{background:rgba(180,77,255,.15);color:var(--purple);}
+.p-cancelled{background:rgba(239,68,68,.15);color:var(--red);}
+
+/* BADGE */
+.badge-rarity{font-size:.65rem;font-weight:900;text-transform:uppercase;padding:2px 7px;border-radius:50px;}
+.bspy{background:rgba(255,170,0,.2);color:var(--spy);}
+.bmyth{background:rgba(255,0,85,.2);color:var(--mythical);}
+.bleg{background:rgba(180,77,255,.2);color:var(--legendary);}
+.brar{background:rgba(47,159,255,.2);color:var(--rare);}
+.bunc{background:rgba(0,204,136,.2);color:var(--green);}
+.bcom{background:rgba(107,114,128,.2);color:var(--muted);}
+
+/* CODE LIST */
+.code-item{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:.8rem 1rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.code-key{font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:900;color:var(--orange);}
+.code-info{font-size:.75rem;color:var(--muted);}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--orange);color:var(--text);padding:10px 20px;border-radius:12px;font-weight:700;font-size:.82rem;z-index:999;opacity:0;transition:.3s;white-space:nowrap;pointer-events:none;max-width:92vw;text-align:center;}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+#toast.err{border-color:var(--red);}#toast.ok{border-color:var(--green);}
+
+.divider{border:none;border-top:1px solid var(--border);margin:1rem 0;}
+.user-row{display:flex;justify-content:space-between;align-items:center;padding:.7rem 0;border-bottom:1px solid rgba(255,255,255,.03);}
+.user-row:last-child{border:none;}
+
+@media(min-width:760px){.stats-grid{grid-template-columns:repeat(4,1fr);}}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN SCREEN ══ -->
+<div id="loginScreen">
+  <div class="lcard">
+    <span class="badge">🛡️</span>
+    <h2>Admin Panel</h2>
+    <p>SpyraZ — Restricted Access Only</p>
+    <input type="text" id="adminUser" placeholder="Admin Username" autocomplete="off">
+    <input type="password" id="adminPass" placeholder="Password" onkeydown="if(event.key==='Enter')tryLogin()">
+    <button onclick="tryLogin()"><i class="fas fa-sign-in-alt"></i> Enter Panel</button>
+    <div class="err-msg" id="loginErr">❌ Wrong credentials</div>
+  </div>
+</div>
+
+<!-- ══ ADMIN PANEL ══ -->
+<div id="adminPanel">
+  <div class="admin-hdr">
+    <h1>SPYRA<span>Z</span> Admin</h1>
+    <button class="logout-btn" onclick="adminLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </div>
+
+  <div class="nav-tabs">
+    <button class="ntab on" onclick="showPanel('dashboard',this)"><i class="fas fa-chart-line"></i> Dashboard</button>
+    <button class="ntab" onclick="showPanel('orders',this)"><i class="fas fa-shopping-bag"></i> Orders</button>
+    <button class="ntab" onclick="showPanel('giveaways',this)"><i class="fas fa-gift"></i> Giveaways</button>
+    <button class="ntab" onclick="showPanel('sell',this)"><i class="fas fa-sack-dollar"></i> Sell Listings</button>
+    <button class="ntab" onclick="showPanel('users',this)"><i class="fas fa-users"></i> Users</button>
+    <button class="ntab" onclick="showPanel('codes',this)"><i class="fas fa-key"></i> Secret Codes</button>
+    <button class="ntab" onclick="showPanel('coins',this)"><i class="fas fa-coins"></i> Give Coins</button>
+    <button class="ntab" onclick="showPanel('announce',this)"><i class="fas fa-megaphone"></i> Announce</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="panel on" id="panel-dashboard">
+    <div class="panel-title"><i class="fas fa-chart-line"></i> Live Dashboard</div>
+    <div class="stats-grid">
+      <div class="scard"><div class="snum" id="stat-users">-</div><div class="slbl">Total Users</div></div>
+      <div class="scard"><div class="snum" id="stat-orders">-</div><div class="slbl">Pending Orders</div></div>
+      <div class="scard"><div class="snum" id="stat-giveaways">-</div><div class="slbl">Giveaway Entries</div></div>
+      <div class="scard"><div class="snum" id="stat-sells">-</div><div class="slbl">Sell Listings</div></div>
+    </div>
+    <div class="card">
+      <h4><i class="fas fa-clock"></i> Recent Activity</h4>
+      <div id="recentActivity"><p style="color:var(--muted);font-size:.85rem;">Loading...</p></div>
+    </div>
+  </div>
+
+  <!-- ORDERS -->
+  <div class="panel" id="panel-orders">
+    <div class="panel-title"><i class="fas fa-shopping-bag"></i> Pending Orders</div>
+    <div class="card">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Fruit</th><th>User</th><th>Roblox ID</th><th>Price</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="ordersBody"><tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem;">Loading...</td></tr></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- GIVEAWAYS -->
+  <div class="panel" id="panel-giveaways">
+    <div class="panel-title"><i class="fas fa-gift"></i> Giveaway Entries</div>
+    <div class="card">
+      <div class="table-wrap"><table>
+        <thead><tr><th>SpyraZ ID</th><th>Roblox ID</th><th>Code</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="giveawayBody"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem;">Loading...</td></tr></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- SELL LISTINGS -->
+  <div class="panel" id="panel-sell">
+    <div class="panel-title"><i class="fas fa-sack-dollar"></i> Sell Listings</div>
+    <div class="card">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Fruit</th><th>User</th><th>Roblox ID</th><th>Asking</th><th>Contact</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="sellBody"><tr><td colspan="8" style="text-align:center;color:var(--muted);padding:2rem;">Loading...</td></tr></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <!-- USERS -->
+  <div class="panel" id="panel-users">
+    <div class="panel-title"><i class="fas fa-users"></i> User Management</div>
+    <div class="card">
+      <h4><i class="fas fa-search"></i> Search User</h4>
+      <div style="display:flex;gap:8px;margin-bottom:1rem;">
+        <input type="text" id="userSearch" placeholder="Username or Roblox ID..." style="flex:1;background:rgba(0,0,0,.4);border:1.5px solid var(--border);border-radius:10px;padding:10px 13px;color:var(--text);font-size:.88rem;outline:none;">
+        <button class="btn btn-o" onclick="searchUser()"><i class="fas fa-search"></i> Search</button>
+      </div>
+      <div id="userSearchResult"></div>
+    </div>
+    <div class="card">
+      <h4><i class="fas fa-list"></i> All Users</h4>
+      <div id="usersList"><p style="color:var(--muted);font-size:.85rem;">Loading...</p></div>
+    </div>
+  </div>
+
+  <!-- SECRET CODES -->
+  <div class="panel" id="panel-codes">
+    <div class="panel-title"><i class="fas fa-key"></i> Secret Codes Manager</div>
+    <div class="card">
+      <h4><i class="fas fa-plus"></i> Create New Code</h4>
+      <div class="row2">
+        <div class="field"><label>Code (UPPERCASE)</label><input type="text" id="codeKey" placeholder="e.g. SPYRAZ2025" style="text-transform:uppercase;" oninput="this.value=this.value.toUpperCase()"></div>
+        <div class="field"><label>Reward Type</label>
+          <select id="codeReward">
+            <option value="coins">💰 Coins</option>
+            <option value="spy">🕵️ Spy Fruit</option>
+            <option value="freespin">🎰 Free Spin</option>
+          </select>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field"><label>Coin Amount (if coins)</label><input type="number" id="codeAmount" placeholder="e.g. 500" min="1"></div>
+        <div class="field"><label>Max Uses (0 = unlimited)</label><input type="number" id="codeMaxUses" placeholder="0" min="0" value="0"></div>
+      </div>
+      <div class="field"><label>Expires At (leave blank = never)</label><input type="datetime-local" id="codeExpiry"></div>
+      <button class="btn-w" onclick="createCode()"><i class="fas fa-plus"></i> CREATE CODE</button>
+    </div>
+    <div class="card">
+      <h4><i class="fas fa-list"></i> Active Codes</h4>
+      <div id="codesList"><p style="color:var(--muted);font-size:.85rem;">Loading...</p></div>
+    </div>
+    <div class="card">
+      <h4><i class="fas fa-history"></i> Recent Redemptions</h4>
+      <div id="redemptionsList"><p style="color:var(--muted);font-size:.85rem;">Loading...</p></div>
+    </div>
+  </div>
+
+  <!-- GIVE COINS -->
+  <div class="panel" id="panel-coins">
+    <div class="panel-title"><i class="fas fa-coins"></i> Give Coins / Rewards</div>
+    <div class="card">
+      <h4><i class="fas fa-user-plus"></i> Give Coins to User</h4>
+      <div class="field"><label>Username</label><input type="text" id="giveUser" placeholder="Enter exact username"></div>
+      <div class="field"><label>Coin Amount</label><input type="number" id="giveAmount" placeholder="e.g. 1000" min="1"></div>
+      <div class="field"><label>Reason (Internal Note)</label><input type="text" id="giveReason" placeholder="e.g. Giveaway winner, correction..."></div>
+      <button class="btn-w" onclick="giveCoins()"><i class="fas fa-coins"></i> GIVE COINS</button>
+    </div>
+    <div class="card">
+      <h4><i class="fas fa-trophy"></i> Mark Giveaway Winner</h4>
+      <div class="field"><label>Entry Key (from Giveaway table)</label><input type="text" id="winnerKey" placeholder="Firebase key"></div>
+      <button class="btn-w" onclick="markWinner()"><i class="fas fa-trophy"></i> MARK AS WINNER</button>
+    </div>
+    <div class="card">
+      <h4><i class="fas fa-rotate"></i> Give Free Spin</h4>
+      <div class="field"><label>Username</label><input type="text" id="freeSpinUser" placeholder="Enter exact username"></div>
+      <button class="btn-w" onclick="giveFreeSpin()"><i class="fas fa-rotate"></i> GIVE FREE SPIN</button>
+    </div>
+  </div>
+
+  <!-- ANNOUNCE -->
+  <div class="panel" id="panel-announce">
+    <div class="panel-title"><i class="fas fa-megaphone"></i> Announcements & Chat</div>
+    <div class="card">
+      <h4><i class="fas fa-broadcast-tower"></i> Post System Announcement</h4>
+      <div class="field"><label>Channel</label>
+        <select id="announceChannel">
+          <option value="announcements">📢 announcements</option>
+          <option value="welcome">👋 welcome</option>
+          <option value="chill-chat">💬 chill-chat</option>
+          <option value="blox-talk">🎮 blox-talk</option>
+        </select>
+      </div>
+      <div class="field"><label>Message</label><textarea id="announceMsg" placeholder="Type announcement..." rows="4"></textarea></div>
+      <button class="btn-w" onclick="postAnnouncement()"><i class="fas fa-paper-plane"></i> POST ANNOUNCEMENT</button>
+    </div>
+    <div class="card">
+      <h4><i class="fas fa-trash"></i> Moderation</h4>
+      <div class="field"><label>Delete Chat Message by Key</label>
+        <div style="display:flex;gap:8px;">
+          <input type="text" id="delChannel" placeholder="Channel name" style="flex:1;background:rgba(0,0,0,.4);border:1.5px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:.85rem;outline:none;">
+          <input type="text" id="delMsgKey" placeholder="Message key" style="flex:1;background:rgba(0,0,0,.4);border:1.5px solid var(--border);border-radius:10px;padding:10px;color:var(--text);font-size:.85rem;outline:none;">
+          <button class="btn btn-r" onclick="deleteMsg()"><i class="fas fa-trash"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /adminPanel -->
+<div id="toast"></div>
+
+<script>
+(function(){var C=[['https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js','https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js','https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js'],['https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/app.min.js','https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/auth.min.js','https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/database.min.js'],['https://unpkg.com/firebase@9.23.0/compat/app.js','https://unpkg.com/firebase@9.23.0/compat/auth.js','https://unpkg.com/firebase@9.23.0/compat/database.js']];
+function ls(u){return new Promise(function(r,j){var s=document.createElement('script');s.src=u;s.onload=r;s.onerror=j;document.head.appendChild(s);});}
+function lc(i){if(i>=C.length)return;ls(C[i][0]).then(function(){return ls(C[i][1]);}).then(function(){return ls(C[i][2]);}).then(function(){window._fbReady=true;document.dispatchEvent(new Event('fbReady'));}).catch(function(){lc(i+1);});}lc(0);})();
+</script>
+<script>
+// ══════════════════════════════
+// ADMIN CREDENTIALS — CHANGE THESE!
+// ══════════════════════════════
+var ADMIN_CREDS = {
+  'spyraz_admin': 'SpyraZ@Admin2025!',
+  'ashwani':      'Ashwani@Owner#99'
+};
+
+var db, auth, isLoggedIn = false;
+
+// ── Toast ──
+function toast(m,t){var el=document.getElementById('toast');el.textContent=m;el.className='on '+(t||'');clearTimeout(el._t);el._t=setTimeout(function(){el.className='';},3500);}
+
+// ── Admin Login ──
+function tryLogin(){
+  var u=document.getElementById('adminUser').value.trim();
+  var p=document.getElementById('adminPass').value;
+  if(ADMIN_CREDS[u]&&ADMIN_CREDS[u]===p){
+    sessionStorage.setItem('spyrazAdmin','1_'+u);
+    showAdmin();
+  } else {
+    document.getElementById('loginErr').style.display='block';
+    setTimeout(function(){document.getElementById('loginErr').style.display='none';},3000);
+  }
+}
+function adminLogout(){sessionStorage.removeItem('spyrazAdmin');location.reload();}
+
+function showAdmin(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('adminPanel').style.display='block';
+  loadDashboard();
+  loadOrders();
+  loadCodes();
+  loadUsers();
+}
+
+// ── Panel switch ──
+function showPanel(name,btn){
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.ntab').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('panel-'+name).classList.add('on');
+  btn.classList.add('on');
+  if(name==='giveaways')loadGiveaways();
+  if(name==='sell')loadSellListings();
+  if(name==='orders')loadOrders();
+  if(name==='codes'){loadCodes();loadRedemptions();}
+  if(name==='users')loadUsers();
+}
+
+// ── Format helpers ──
+function fmtDate(ts){return ts?new Date(ts).toLocaleDateString():'?';}
+function fmtVal(v){if(!v||v===0)return 'Priceless';if(v>=1000000)return (v/1000000).toFixed(1)+'M';if(v>=1000)return (v/1000).toFixed(0)+'K';return String(v);}
+function rarBadge(r){var m={spy:'bspy',mythical:'bmyth',legendary:'bleg',rare:'brar',uncommon:'bunc',common:'bcom'};return '<span class="badge-rarity '+(m[r]||'bcom')+'">'+(r||'?')+'</span>';}
+function esc(t){var d=document.createElement('div');d.appendChild(document.createTextNode(t||''));return d.innerHTML;}
+
+// ── DASHBOARD ──
+function loadDashboard(){
+  db.ref('users').once('value',function(s){document.getElementById('stat-users').textContent=s.numChildren?s.numChildren():Object.keys(s.val()||{}).length;});
+  db.ref('orders').orderByChild('status').equalTo('pending').once('value',function(s){document.getElementById('stat-orders').textContent=s.numChildren?s.numChildren():Object.keys(s.val()||{}).length;});
+  db.ref('giveaways').once('value',function(s){document.getElementById('stat-giveaways').textContent=s.numChildren?s.numChildren():Object.keys(s.val()||{}).length;});
+  db.ref('sellListings').once('value',function(s){document.getElementById('stat-sells').textContent=s.numChildren?s.numChildren():Object.keys(s.val()||{}).length;});
+  // Recent activity
+  var ra=document.getElementById('recentActivity');ra.innerHTML='';
+  db.ref('orders').limitToLast(5).once('value',function(s){
+    if(!s.exists()){ra.innerHTML='<p style="color:var(--muted);font-size:.85rem;">No recent orders.</p>';return;}
+    var items=[];s.forEach(function(c){items.unshift({key:c.key,...c.val()});});
+    items.forEach(function(o){
+      ra.innerHTML+='<div class="user-row"><div><strong style="font-size:.88rem;">🛒 '+esc(o.fruit)+'</strong> <span style="color:var(--muted);font-size:.78rem;">by '+esc(o.username)+'</span></div><span class="pill p-pending">order</span></div>';
+    });
+  });
+}
+
+// ── ORDERS ──
+function loadOrders(){
+  var tbody=document.getElementById('ordersBody');
+  db.ref('orders').orderByChild('status').once('value',function(s){
+    if(!s.exists()){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:2rem;">No orders yet.</td></tr>';return;}
+    var items=[];s.forEach(function(c){items.unshift({key:c.key,...c.val()});});
+    tbody.innerHTML='';
+    items.forEach(function(o){
+      var pc=o.status==='completed'?'p-done':'p-pending';
+      tbody.innerHTML+='<tr>'+
+        '<td>'+rarBadge(o.rarity)+' '+esc(o.emoji||'')+'<strong> '+esc(o.fruit)+'</strong></td>'+
+        '<td>'+esc(o.username)+'</td>'+
+        '<td style="font-family:monospace;font-size:.78rem;color:var(--orange);">'+esc(o.robloxId)+'</td>'+
+        '<td>'+fmtVal(o.price)+'</td>'+
+        '<td>'+fmtDate(o.timestamp)+'</td>'+
+        '<td><span class="pill '+pc+'">'+esc(o.status)+'</span></td>'+
+        '<td><button class="btn btn-g" onclick="completeOrder(\''+o.key+'\')"><i class="fas fa-check"></i> Done</button></td>'+
+      '</tr>';
+    });
+  });
+}
+async function completeOrder(key){
+  if(!confirm('Mark this order as completed/delivered?'))return;
+  await db.ref('orders/'+key+'/status').set('completed');
+  toast('Order marked as delivered! ✅','ok');loadOrders();
+}
+
+// ── GIVEAWAYS ──
+function loadGiveaways(){
+  var tbody=document.getElementById('giveawayBody');
+  db.ref('giveaways').once('value',function(s){
+    if(!s.exists()){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:2rem;">No entries.</td></tr>';return;}
+    var items=[];s.forEach(function(c){items.unshift({key:c.key,...c.val()});});
+    tbody.innerHTML='';
+    items.forEach(function(e){
+      var pc=e.status==='winner'?'p-winner':'p-pending';
+      tbody.innerHTML+='<tr>'+
+        '<td><strong>'+esc(e.spyrazId)+'</strong></td>'+
+        '<td style="font-family:monospace;color:var(--orange);font-size:.78rem;">'+esc(e.robloxId)+'</td>'+
+        '<td><code style="background:rgba(255,140,0,.1);padding:2px 8px;border-radius:6px;font-size:.8rem;color:var(--orange);">'+esc(e.videoCode)+'</code></td>'+
+        '<td>'+fmtDate(e.timestamp)+'</td>'+
+        '<td><span class="pill '+pc+'">'+esc(e.status)+'</span></td>'+
+        '<td><button class="btn btn-b" onclick="markGiveawayWinner(\''+e.key+'\')"><i class="fas fa-trophy"></i> Winner</button></td>'+
+      '</tr>';
+    });
+  });
+}
+async function markGiveawayWinner(key){
+  if(!confirm('Mark this entry as winner?'))return;
+  await db.ref('giveaways/'+key+'/status').set('winner');
+  toast('🏆 Winner marked!','ok');loadGiveaways();
+}
+
+// ── SELL LISTINGS ──
+function loadSellListings(){
+  var tbody=document.getElementById('sellBody');
+  db.ref('sellListings').once('value',function(s){
+    if(!s.exists()){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--muted);padding:2rem;">No listings.</td></tr>';return;}
+    var items=[];s.forEach(function(c){items.unshift({key:c.key,...c.val()});});
+    tbody.innerHTML='';
+    items.forEach(function(l){
+      var pc=l.status==='completed'?'p-done':l.status==='cancelled'?'p-cancelled':'p-pending';
+      tbody.innerHTML+='<tr>'+
+        '<td>'+rarBadge(l.rarity)+' '+esc(l.fruit)+'</td>'+
+        '<td>'+esc(l.username)+'</td>'+
+        '<td style="font-family:monospace;color:var(--orange);font-size:.78rem;">'+esc(l.robloxId)+'</td>'+
+        '<td>'+fmtVal(l.price)+'</td>'+
+        '<td style="font-size:.78rem;">'+esc(l.contact)+'</td>'+
+        '<td>'+fmtDate(l.timestamp)+'</td>'+
+        '<td><span class="pill '+pc+'">'+esc(l.status)+'</span></td>'+
+        '<td style="display:flex;gap:5px;">'+
+          '<button class="btn btn-g" onclick="completeSell(\''+l.key+'\')"><i class="fas fa-check"></i></button>'+
+          '<button class="btn btn-r" onclick="cancelSell(\''+l.key+'\')"><i class="fas fa-xmark"></i></button>'+
+        '</td>'+
+      '</tr>';
+    });
+  });
+}
+async function completeSell(key){await db.ref('sellListings/'+key+'/status').set('completed');toast('Sell listing marked done','ok');loadSellListings();}
+async function cancelSell(key){await db.ref('sellListings/'+key+'/status').set('cancelled');toast('Sell listing cancelled','ok');loadSellListings();}
+
+// ── USERS ──
+function loadUsers(){
+  var list=document.getElementById('usersList');
+  db.ref('users').once('value',function(s){
+    if(!s.exists()){list.innerHTML='<p style="color:var(--muted);">No users.</p>';return;}
+    list.innerHTML='';
+    var items=[];s.forEach(function(c){items.push({uid:c.key,...c.val()});});
+    items.sort(function(a,b){return (b.createdAt||0)-(a.createdAt||0);});
+    items.forEach(function(u){
+      list.innerHTML+='<div class="user-row">'+
+        '<div>'+
+          '<strong style="font-size:.9rem;">'+esc(u.username||'?')+'</strong>'+
+          '<span style="color:var(--muted);font-size:.75rem;margin-left:8px;">'+esc(u.robloxId||'No Roblox ID')+'</span>'+
+        '</div>'+
+        '<div style="display:flex;align-items:center;gap:8px;">'+
+          '<span style="color:var(--orange);font-size:.82rem;font-weight:800;">🪙 '+(u.coils||0).toLocaleString()+'</span>'+
+          '<span style="color:var(--muted);font-size:.75rem;">'+fmtDate(u.createdAt)+'</span>'+
+        '</div>'+
+      '</div>';
+    });
+  });
+}
+function searchUser(){
+  var q=document.getElementById('userSearch').value.trim().toLowerCase();
+  var res=document.getElementById('userSearchResult');res.innerHTML='';
+  if(!q)return;
+  db.ref('users').once('value',function(s){
+    var found=[];
+    s.forEach(function(c){
+      var u=c.val();
+      if((u.username||'').toLowerCase().includes(q)||(u.robloxId||'').includes(q)){
+        found.push({uid:c.key,...u});
+      }
+    });
+    if(!found.length){res.innerHTML='<p style="color:var(--muted);font-size:.85rem;">No users found.</p>';return;}
+    found.forEach(function(u){
+      res.innerHTML+='<div style="background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:.9rem;margin-bottom:8px;">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;">'+
+          '<div><strong>'+esc(u.username)+'</strong><br><span style="font-size:.75rem;color:var(--muted);">UID: '+esc(u.uid)+'</span><br>'+
+          '<span style="font-size:.75rem;color:var(--orange);">Roblox: '+esc(u.robloxId||'N/A')+'</span></div>'+
+          '<div style="text-align:right;"><div style="color:var(--orange);font-weight:800;">🪙 '+(u.coils||0).toLocaleString()+'</div>'+
+          '<div style="font-size:.72rem;color:var(--muted);">Joined '+fmtDate(u.createdAt)+'</div></div>'+
+        '</div>'+
+      '</div>';
+    });
+  });
+}
+
+// ── SECRET CODES ──
+async function createCode(){
+  var key=document.getElementById('codeKey').value.trim().toUpperCase();
+  var reward=document.getElementById('codeReward').value;
+  var amount=parseInt(document.getElementById('codeAmount').value)||0;
+  var maxUses=parseInt(document.getElementById('codeMaxUses').value)||0;
+  var expiry=document.getElementById('codeExpiry').value;
+  if(!key){toast('Enter a code name!','err');return;}
+  var data={reward:reward,createdAt:Date.now()};
+  if(reward==='coins'&&amount>0)data.amount=amount;
+  if(maxUses>0)data.maxUses=maxUses;
+  if(expiry)data.expiresAt=new Date(expiry).getTime();
+  await db.ref('secretCodes/'+key).set(data);
+  toast('Code '+key+' created! 🔑','ok');
+  document.getElementById('codeKey').value='';document.getElementById('codeAmount').value='';document.getElementById('codeMaxUses').value='0';document.getElementById('codeExpiry').value='';
+  loadCodes();
+}
+function loadCodes(){
+  var list=document.getElementById('codesList');
+  db.ref('secretCodes').once('value',function(s){
+    if(!s.exists()){list.innerHTML='<p style="color:var(--muted);font-size:.85rem;">No codes yet.</p>';return;}
+    list.innerHTML='';
+    s.forEach(function(c){
+      var d=c.val();
+      var rewardTxt=d.reward==='coins'?'💰 '+d.amount+' coins':d.reward==='spy'?'🕵️ Spy Fruit':'🎰 Free Spin';
+      var expTxt=d.expiresAt?'Expires: '+fmtDate(d.expiresAt):'Never expires';
+      list.innerHTML+='<div class="code-item">'+
+        '<div><div class="code-key">'+esc(c.key)+'</div><div class="code-info">'+rewardTxt+' · '+(d.maxUses?'Max uses: '+d.maxUses:'Unlimited')+' · '+expTxt+'</div></div>'+
+        '<button class="btn btn-r" onclick="deleteCode(\''+esc(c.key)+'\')"><i class="fas fa-trash"></i></button>'+
+      '</div>';
+    });
+  });
+}
+async function deleteCode(key){
+  if(!confirm('Delete code '+key+'?'))return;
+  await db.ref('secretCodes/'+key).remove();
+  toast('Code deleted','ok');loadCodes();
+}
+function loadRedemptions(){
+  var list=document.getElementById('redemptionsList');
+  db.ref('codeRedemptions').once('value',function(s){
+    if(!s.exists()){list.innerHTML='<p style="color:var(--muted);font-size:.85rem;">No redemptions.</p>';return;}
+    list.innerHTML='';var count=0;
+    s.forEach(function(user){
+      user.forEach(function(code){
+        if(count++>20)return;
+        var d=code.val();
+        list.innerHTML+='<div class="user-row"><div><strong style="font-size:.85rem;">'+esc(d.username||'?')+'</strong> redeemed <code style="color:var(--orange);">'+esc(code.key)+'</code></div><span style="font-size:.72rem;color:var(--muted);">'+fmtDate(d.timestamp)+'</span></div>';
+      });
+    });
+  });
+}
+
+// ── GIVE COINS ──
+async function giveCoins(){
+  var username=document.getElementById('giveUser').value.trim();
+  var amount=parseInt(document.getElementById('giveAmount').value)||0;
+  var reason=document.getElementById('giveReason').value.trim()||'Admin grant';
+  if(!username||amount<=0){toast('Fill in username and amount!','err');return;}
+  // Find user by username
+  var snap=await db.ref('users').orderByChild('username').equalTo(username).once('value');
+  if(!snap.exists()){toast('User not found!','err');return;}
+  var uid=Object.keys(snap.val())[0];
+  var user=snap.val()[uid];
+  var newCoins=(user.coils||0)+amount;
+  await db.ref('users/'+uid+'/coils').set(newCoins);
+  await db.ref('adminLog').push({action:'giveCoins',toUser:username,uid:uid,amount:amount,reason:reason,by:'admin',timestamp:Date.now()});
+  toast('✅ Gave '+amount+' coins to '+username,'ok');
+  document.getElementById('giveUser').value='';document.getElementById('giveAmount').value='';document.getElementById('giveReason').value='';
+}
+
+async function markWinner(){
+  var key=document.getElementById('winnerKey').value.trim();
+  if(!key){toast('Enter entry key!','err');return;}
+  await db.ref('giveaways/'+key+'/status').set('winner');
+  toast('🏆 Winner marked!','ok');
+}
+
+async function giveFreeSpin(){
+  var username=document.getElementById('freeSpinUser').value.trim();
+  if(!username){toast('Enter username!','err');return;}
+  var snap=await db.ref('users').orderByChild('username').equalTo(username).once('value');
+  if(!snap.exists()){toast('User not found!','err');return;}
+  var uid=Object.keys(snap.val())[0];
+  // Reset lastFreeSpin to allow free spin immediately
+  await db.ref('users/'+uid+'/lastFreeSpin').set(0);
+  toast('🎰 Free spin given to '+username,'ok');
+  document.getElementById('freeSpinUser').value='';
+}
+
+// ── ANNOUNCE ──
+async function postAnnouncement(){
+  var ch=document.getElementById('announceChannel').value;
+  var msg=document.getElementById('announceMsg').value.trim();
+  if(!msg){toast('Type a message!','err');return;}
+  await db.ref('chat/'+ch).push({uid:'ADMIN',username:'⚡ SpyraZ Admin',text:msg,timestamp:Date.now(),isSystem:true});
+  toast('Announcement posted to #'+ch,'ok');
+  document.getElementById('announceMsg').value='';
+}
+async function deleteMsg(){
+  var ch=document.getElementById('delChannel').value.trim();
+  var key=document.getElementById('delMsgKey').value.trim();
+  if(!ch||!key){toast('Fill channel and message key!','err');return;}
+  await db.ref('chat/'+ch+'/'+key).remove();
+  toast('Message deleted','ok');
+}
+
+// ── BOOT ──
+function bootApp(){
+  firebase.initializeApp({apiKey:"AIzaSyBvRRGp7Di6QK6LvbLIl8jyalkYmUkYISw",authDomain:"spyraz-4d24e.firebaseapp.com",databaseURL:"https://spyraz-4d24e-default-rtdb.firebaseio.com/",projectId:"spyraz-4d24e",storageBucket:"spyraz-4d24e.firebasestorage.app",messagingSenderId:"533558439070",appId:"1:533558439070:web:382971879027a158ad9f8f"});
+  auth=firebase.auth();db=firebase.database();
+  // Auto-login if session exists
+  if(sessionStorage.getItem('spyrazAdmin')){showAdmin();}
+}
+if(window._fbReady){bootApp();}else{document.addEventListener('fbReady',bootApp);}
+</script>
+</body>
+</html>

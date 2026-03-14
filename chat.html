@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpyraZ | Community Chat</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+:root{--bg:#07080d;--card:#0f1118;--card2:#161922;--border:rgba(255,255,255,0.06);--orange:#ff8c00;--text:#f1f5f9;--muted:#64748b;--green:#00cc88;--red:#ef4444;--nav-h:64px;--sidebar-w:260px;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{background:var(--bg);color:var(--text);display:flex;flex-direction:column;overflow:hidden;}
+
+/* TOP HEADER */
+.top-header{display:flex;justify-content:space-between;align-items:center;padding:0.8rem 1rem;background:rgba(7,8,13,0.97);border-bottom:1px solid var(--border);z-index:200;flex-shrink:0;height:56px;}
+.logo{font-family:'Outfit',sans-serif;font-size:1.4rem;font-weight:900;color:white;}.logo span{color:var(--orange);}
+.login-pill{background:var(--orange);color:#000;padding:7px 16px;border-radius:50px;font-weight:800;font-size:0.78rem;text-decoration:none;}
+.user-pill{display:none;align-items:center;gap:7px;background:rgba(255,140,0,0.1);border:1px solid rgba(255,140,0,0.3);padding:5px 12px 5px 5px;border-radius:50px;}
+.logout-btn{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:5px 11px;border-radius:50px;font-weight:800;font-size:.72rem;cursor:pointer;margin-left:4px;transition:.2s;}
+.logout-btn:hover{background:rgba(239,68,68,.3);}
+.user-avatar{width:26px;height:26px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.75rem;color:#000;}
+
+/* CHAT LAYOUT */
+.chat-app{display:flex;flex:1;overflow:hidden;height:calc(100vh - 56px - var(--nav-h));}
+
+/* CHANNEL SIDEBAR */
+.ch-sidebar{width:var(--sidebar-w);background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;transition:0.3s;overflow:hidden;}
+.ch-sidebar.hidden{width:0;}
+.ch-header{padding:1rem;border-bottom:1px solid var(--border);flex-shrink:0;}
+.ch-header h3{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:900;color:white;}
+.ch-header p{font-size:0.72rem;color:var(--muted);margin-top:2px;}
+.ch-list{flex:1;overflow-y:auto;padding:8px;}
+.ch-list::-webkit-scrollbar{width:3px;}.ch-list::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
+.ch-group-label{font-size:0.65rem;font-weight:800;text-transform:uppercase;color:var(--muted);padding:10px 8px 4px;letter-spacing:1px;}
+.ch-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;cursor:pointer;color:var(--muted);font-size:0.85rem;font-weight:600;transition:0.15s;margin-bottom:2px;}
+.ch-item:hover{background:rgba(255,255,255,0.04);color:var(--text);}
+.ch-item.active{background:rgba(255,140,0,0.12);color:var(--orange);font-weight:800;}
+.ch-item i{font-size:0.9rem;width:16px;text-align:center;}
+.ch-badge{margin-left:auto;background:var(--red);color:white;padding:1px 7px;border-radius:50px;font-size:0.65rem;font-weight:900;}
+
+/* DM SECTION */
+.dm-search{padding:8px;border-bottom:1px solid var(--border);}
+.dm-search input{width:100%;background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:8px;padding:8px 12px;color:var(--text);font-size:0.82rem;outline:none;}
+.dm-search input:focus{border-color:var(--orange);}
+
+/* CHAT MAIN */
+.chat-main{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.chat-top-bar{display:flex;align-items:center;gap:10px;padding:0.75rem 1rem;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--card);}
+.menu-toggle{background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px;border-radius:8px;}
+.menu-toggle:hover{color:var(--orange);}
+.chat-top-bar h4{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:900;color:white;}
+.chat-top-bar span{font-size:0.75rem;color:var(--muted);}
+.online-dot{width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0;}
+
+/* MESSAGES */
+.messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:2px;}
+.messages::-webkit-scrollbar{width:4px;}.messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px;}
+.msg-group{display:flex;gap:10px;padding:4px 0;border-radius:12px;padding:6px 8px;}
+.msg-group:hover{background:rgba(255,255,255,0.02);}
+.msg-avatar{width:36px;height:36px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:0.85rem;color:#000;flex-shrink:0;margin-top:2px;}
+.msg-body{flex:1;min-width:0;}
+.msg-meta{display:flex;align-items:baseline;gap:8px;margin-bottom:3px;}
+.msg-name{font-weight:800;font-size:0.88rem;color:white;}
+.msg-name.is-owner{color:var(--orange);}
+.msg-time{font-size:0.68rem;color:var(--muted);}
+.msg-text{font-size:0.88rem;color:#c8d3e0;line-height:1.5;word-break:break-word;}
+.msg-continued{padding-left:46px;}
+.msg-continued .msg-text{font-size:0.88rem;color:#c8d3e0;}
+.system-msg{text-align:center;font-size:0.75rem;color:var(--muted);padding:8px 0;font-weight:600;}
+
+/* INPUT */
+.chat-input-area{padding:0.75rem 1rem;border-top:1px solid var(--border);background:var(--card);flex-shrink:0;}
+.input-row{display:flex;gap:8px;align-items:flex-end;background:rgba(0,0,0,0.4);border:1.5px solid var(--border);border-radius:14px;padding:8px 12px;transition:0.2s;}
+.input-row:focus-within{border-color:var(--orange);}
+.msg-input{flex:1;background:none;border:none;color:var(--text);font-size:0.9rem;outline:none;resize:none;max-height:100px;font-family:inherit;line-height:1.4;}
+.send-btn{background:var(--orange);border:none;border-radius:10px;color:#000;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:0.2s;font-size:0.9rem;}
+.send-btn:hover{transform:scale(1.08);}
+.send-btn:disabled{background:#1e293b;color:var(--muted);cursor:not-allowed;transform:none;}
+.typing-indicator{font-size:0.72rem;color:var(--muted);margin-top:4px;min-height:16px;}
+
+/* BLOCKER */
+.blocker-overlay{position:absolute;inset:0;background:rgba(7,8,13,0.95);display:flex;align-items:center;justify-content:center;z-index:50;flex-direction:column;text-align:center;padding:2rem;}
+.blocker-overlay i{font-size:3rem;color:var(--orange);margin-bottom:1rem;}
+.blocker-overlay h2{font-family:'Outfit',sans-serif;font-size:1.5rem;margin-bottom:0.5rem;}
+.blocker-overlay p{color:var(--muted);font-size:0.88rem;margin-bottom:1.5rem;}
+.btn-o{background:var(--orange);color:#000;padding:12px 28px;border-radius:14px;font-weight:800;font-size:0.88rem;text-decoration:none;display:inline-flex;align-items:center;gap:8px;}
+
+/* BOTTOM NAV */
+.bottom-nav{height:var(--nav-h);background:rgba(10,11,18,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-around;flex-shrink:0;}
+.nav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 6px;text-decoration:none;color:var(--muted);flex:1;max-width:70px;}
+.nav-btn i{font-size:1.2rem;}.nav-btn span{font-size:0.6rem;font-weight:700;text-transform:uppercase;}
+.nav-btn.active{color:var(--orange);}
+
+/* MOBILE SIDEBAR OVERLAY */
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:149;}
+.sidebar-overlay.show{display:block;}
+@media(max-width:640px){
+  .ch-sidebar{position:fixed;top:56px;left:0;bottom:var(--nav-h);z-index:150;transform:translateX(-100%);transition:0.3s;}
+  .ch-sidebar.show-mobile{transform:translateX(0);}
+}
+@media(min-width:641px){.menu-toggle{display:none;}}
+</style>
+</head>
+<body>
+
+<header class="top-header">
+  <div class="logo">SPYRA<span>Z</span> <span style="font-size:0.8rem;font-weight:600;color:var(--muted);">Chat</span></div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="login.html" class="login-pill" id="loginBtn"><i class="fas fa-user"></i> Login</a>
+    <div class="user-pill" id="userPill"><div class="user-avatar" id="uAvatar">S</div><span style="font-weight:800;font-size:0.78rem;color:white;" id="uName">User</span><button class="logout-btn" onclick="doLogout()">⏻</button></div>
+  </div>
+</header>
+
+<div class="chat-app" style="position:relative;">
+
+  <!-- SIDEBAR OVERLAY (mobile) -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+  <!-- CHANNEL SIDEBAR -->
+  <div class="ch-sidebar" id="chSidebar">
+    <div class="ch-header">
+      <h3>SpyraZ Community</h3>
+      <p>No rules — just chill</p>
+    </div>
+    <div class="ch-list" id="chList">
+      <!-- Channels injected by JS -->
+    </div>
+  </div>
+
+  <!-- MAIN CHAT -->
+  <div class="chat-main" style="position:relative;">
+    <!-- Blocker for logged out -->
+    <div class="blocker-overlay" id="blockerOverlay">
+      <i class="fas fa-comment-slash"></i>
+      <h2>Login to Chat</h2>
+      <p>Join the SpyraZ community — talk, trade, find fruits!</p>
+      <a href="login.html" class="btn-o"><i class="fas fa-sign-in-alt"></i> Login Now</a>
+    </div>
+
+    <div class="chat-top-bar">
+      <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+      <div class="online-dot"></div>
+      <div>
+        <h4 id="currentChName"># welcome</h4>
+        <span id="currentChDesc">Welcome to SpyraZ!</span>
+      </div>
+    </div>
+
+    <div class="messages" id="messages">
+      <div class="system-msg">Welcome to SpyraZ Chat! Be cool. 🔥</div>
+    </div>
+
+    <div class="chat-input-area">
+      <div class="input-row">
+        <textarea class="msg-input" id="msgInput" placeholder="Message #welcome..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+      </div>
+      <div class="typing-indicator" id="typingIndicator"></div>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom-nav">
+  <a href="index.html" class="nav-btn"><i class="fas fa-house"></i><span>Home</span></a>
+  <a href="giveaway.html" class="nav-btn"><i class="fas fa-gift"></i><span>Win</span></a>
+  <a href="spin.html" class="nav-btn"><i class="fas fa-rotate"></i><span>Spin</span></a>
+  <a href="chat.html" class="nav-btn active"><i class="fas fa-comment-dots"></i><span>Chat</span></a>
+  <a href="market.html" class="nav-btn"><i class="fas fa-shop"></i><span>Market</span></a>
+  <a href="trade.html" class="nav-btn"><i class="fas fa-repeat"></i><span>Trade</span></a>
+  <a href="sell.html" class="nav-btn"><i class="fas fa-sack-dollar"></i><span>Sell</span></a>
+</nav>
+
+<script>
+(function(){var C=[['https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js','https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js','https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js'],['https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/app.min.js','https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/auth.min.js','https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/database.min.js'],['https://unpkg.com/firebase@9.23.0/compat/app.js','https://unpkg.com/firebase@9.23.0/compat/auth.js','https://unpkg.com/firebase@9.23.0/compat/database.js']];
+function ls(u){return new Promise(function(r,j){var s=document.createElement('script');s.src=u;s.onload=r;s.onerror=j;document.head.appendChild(s);});}
+function lc(i){if(i>=C.length)return;ls(C[i][0]).then(function(){return ls(C[i][1]);}).then(function(){return ls(C[i][2]);}).then(function(){window._fbReady=true;document.dispatchEvent(new Event('fbReady'));}).catch(function(){lc(i+1);});}lc(0);})();
+</script>
+<script>
+var db,auth,myUid,myData={},currentChannel='welcome',msgListener=null;
+var OWNER_UID=''; // Set this to your UID from Firebase console
+
+var CHANNELS=[
+  {group:'GATEWAY',items:[
+    {id:'welcome',name:'welcome',icon:'fa-hand-wave',desc:'Say hi to everyone!'},
+    {id:'invites',name:'invites',icon:'fa-link',desc:'Share SpyraZ links'},
+    {id:'level-ups',name:'level-ups',icon:'fa-arrow-up',desc:'Flex your Blox Fruits levels'},
+    {id:'verification',name:'verification',icon:'fa-check-circle',desc:'Get verified'},
+    {id:'announcements',name:'announcements',icon:'fa-megaphone',desc:'Official SpyraZ announcements'}
+  ]},
+  {group:'BLOX FRUITS',items:[
+    {id:'roblox-usernames',name:'roblox-usernames',icon:'fa-gamepad',desc:'Drop your Roblox username'},
+    {id:'looking-for-trade',name:'looking-for-trade',icon:'fa-repeat',desc:'Find trade partners'},
+    {id:'fruit-prices',name:'fruit-prices',icon:'fa-tag',desc:'Current fruit price list'},
+    {id:'spy-fruit',name:'spy-fruit',icon:'fa-user-secret',desc:'Spy fruit discussion & flex'},
+    {id:'blox-talk',name:'blox-talk',icon:'fa-comments',desc:'General Blox Fruits chat'},
+    {id:'raids',name:'raids',icon:'fa-skull-crossbones',desc:'Find raid partners'},
+    {id:'pvp',name:'pvp',icon:'fa-sword',desc:'PvP matchmaking'}
+  ]},
+  {group:'DASHBOARD',items:[
+    {id:'chill-chat',name:'chill-chat',icon:'fa-mug-hot',desc:'General chill vibes'},
+    {id:'gallery-photos',name:'gallery-photos',icon:'fa-image',desc:'Share your screenshots'},
+    {id:'memes',name:'memes',icon:'fa-face-grin-squint-tears',desc:'Post your best memes'},
+    {id:'yt-clips',name:'yt-clips',icon:'fa-youtube',desc:'Share SpyraZ clips'},
+    {id:'suggestions',name:'suggestions',icon:'fa-lightbulb',desc:'Suggest features or ideas'},
+    {id:'rants',name:'rants',icon:'fa-fire',desc:'Let it out'},
+    {id:'introductions',name:'introductions',icon:'fa-id-card',desc:'Introduce yourself'}
+  ]},
+  {group:'MARKET',items:[
+    {id:'sell-offers',name:'sell-offers',icon:'fa-sack-dollar',desc:'Post your sell offers'},
+    {id:'buy-requests',name:'buy-requests',icon:'fa-cart-shopping',desc:'Request fruits to buy'}
+  ]}
+];
+
+function buildSidebar(){
+  var list=document.getElementById('chList');list.innerHTML='';
+  CHANNELS.forEach(function(group){
+    list.innerHTML+='<div class="ch-group-label">'+group.group+'</div>';
+    group.items.forEach(function(ch){
+      list.innerHTML+='<div class="ch-item'+(ch.id===currentChannel?' active':'')+ '" onclick="switchChannel(\''+ch.id+'\',\''+ch.name+'\',\''+ch.desc+'\')"><i class="fas '+ch.icon+'"></i># '+ch.name+'</div>';
+    });
+  });
+}
+
+function switchChannel(id,name,desc){
+  currentChannel=id;
+  document.getElementById('currentChName').textContent='# '+name;
+  document.getElementById('currentChDesc').textContent=desc;
+  document.getElementById('msgInput').placeholder='Message #'+name+'...';
+  buildSidebar();
+  loadMessages();
+  closeSidebar();
+}
+
+function toggleSidebar(){
+  var sb=document.getElementById('chSidebar');
+  var ov=document.getElementById('sidebarOverlay');
+  sb.classList.toggle('show-mobile');
+  ov.classList.toggle('show');
+}
+function closeSidebar(){
+  document.getElementById('chSidebar').classList.remove('show-mobile');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+}
+
+var renderedIds=new Set();
+function loadMessages(){
+  var container=document.getElementById('messages');
+  container.innerHTML='<div class="system-msg">Loading messages...</div>';
+  renderedIds.clear();
+  if(msgListener){db.ref('chat/'+currentChannel).off('child_added',msgListener);msgListener=null;}
+  msgListener=db.ref('chat/'+currentChannel).limitToLast(60).on('child_added',function(snap){
+    var msg=snap.val();var id=snap.key;
+    if(renderedIds.has(id))return;
+    renderedIds.add(id);
+    if(renderedIds.size===1)container.innerHTML='';
+    renderMessage(msg,id);
+    container.scrollTop=container.scrollHeight;
+  });
+}
+
+function renderMessage(msg,id){
+  var container=document.getElementById('messages');
+  var isMine=msg.uid===myUid;
+  var isOwner=msg.uid===OWNER_UID;
+  var initials=(msg.username||'U').charAt(0).toUpperCase();
+  var colors=['#ff8c00','#cc00ff','#0088ff','#00cc88','#ff0055','#ffaa00'];
+  var colorIdx=msg.username?msg.username.charCodeAt(0)%colors.length:0;
+  var avatarColor=isOwner?'var(--orange)':colors[colorIdx];
+  var nameClass=isOwner?'msg-name is-owner':'msg-name';
+  var time=msg.timestamp?new Date(msg.timestamp).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):'';
+  var ownerBadge=isOwner?'<span style="background:var(--orange);color:#000;padding:1px 7px;border-radius:50px;font-size:0.65rem;font-weight:900;margin-left:4px;">OWNER</span>':'';
+  container.innerHTML+='<div class="msg-group"><div class="msg-avatar" style="background:'+avatarColor+'">'+initials+'</div><div class="msg-body"><div class="msg-meta"><span class="'+nameClass+'">'+escHtml(msg.username||'User')+ownerBadge+'</span><span class="msg-time">'+time+'</span></div><div class="msg-text">'+escHtml(msg.text||'')+'</div></div></div>';
+}
+
+function escHtml(t){var d=document.createElement('div');d.appendChild(document.createTextNode(t));return d.innerHTML;}
+
+async function sendMessage(){
+  var input=document.getElementById('msgInput');
+  var text=input.value.trim();
+  if(!text||!myUid)return;
+  input.value='';autoResize(input);
+  document.getElementById('sendBtn').disabled=true;
+  try{
+    await db.ref('chat/'+currentChannel).push({uid:myUid,username:myData.username||'User',text:text,timestamp:Date.now()});
+  }catch(e){console.error(e);}
+  document.getElementById('sendBtn').disabled=false;
+}
+
+function handleKey(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}}
+function autoResize(el){el.style.height='auto';el.style.height=Math.min(el.scrollHeight,100)+'px';}
+
+function bootApp(){
+  firebase.initializeApp({apiKey:"AIzaSyBvRRGp7Di6QK6LvbLIl8jyalkYmUkYISw",authDomain:"spyraz-4d24e.firebaseapp.com",databaseURL:"https://spyraz-4d24e-default-rtdb.firebaseio.com/",projectId:"spyraz-4d24e",storageBucket:"spyraz-4d24e.firebasestorage.app",messagingSenderId:"533558439070",appId:"1:533558439070:web:382971879027a158ad9f8f"});
+  auth=firebase.auth();db=firebase.database();
+  buildSidebar();
+  auth.onAuthStateChanged(function(user){
+    if(user){
+      myUid=user.uid;
+      document.getElementById('loginBtn').style.display='none';
+      document.getElementById('userPill').style.display='flex';
+      document.getElementById('blockerOverlay').style.display='none';
+      db.ref('users/'+myUid).once('value',function(s){
+        if(!s.exists())return;myData=s.val();
+        document.getElementById('uName').innerText=myData.username||'User';
+        document.getElementById('uAvatar').innerText=(myData.username||'U').charAt(0).toUpperCase();
+        loadMessages();
+      });
+    }else{
+      document.getElementById('loginBtn').style.display='flex';
+      document.getElementById('userPill').style.display='none';
+      document.getElementById('blockerOverlay').style.display='flex';
+    }
+  });
+}
+if(window._fbReady){bootApp();}else{document.addEventListener('fbReady',bootApp);}
+function doLogout(){firebase.auth().signOut().then(function(){window.location.href='login.html';});}
+</script>
+</body>
+</html>

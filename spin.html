@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>SpyraZ | Fruit Spin</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+:root{
+  --bg:#07080d;--card:#0f1118;--card2:#161b24;--border:rgba(255,255,255,0.06);
+  --orange:#ff8c00;--og:rgba(255,140,0,0.12);--text:#f1f5f9;--muted:#64748b;
+  --green:#00cc88;--red:#ef4444;--nav-h:64px;
+  --spy:#ffaa00;--mythical:#ff0055;--legendary:#b44dff;--rare:#2f9fff;--uncommon:#00cc88;--common:#6b7280;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+/* Increased padding-bottom to fix the scroll clipping bug */
+body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:120px;overflow-x:hidden;}
+
+/* ── HEADER ── */
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:.75rem 1rem;background:rgba(7,8,13,.97);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:120;}
+.logo{font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:900;color:#fff;letter-spacing:-1px;}.logo span{color:var(--orange);}
+.hdr-right{display:flex;gap:8px;align-items:center;}
+.coin-pill{background:var(--og);border:1px solid rgba(255,140,0,.3);padding:5px 12px;border-radius:50px;font-family:'Outfit',sans-serif;font-weight:900;font-size:.9rem;color:#fff;display:none;align-items:center;gap:5px;white-space:nowrap;}
+.coin-pill i{color:var(--orange);}
+.login-pill{background:var(--orange);color:#000;padding:7px 16px;border-radius:50px;font-weight:800;font-size:.78rem;text-decoration:none;}
+.user-pill{display:none;align-items:center;gap:7px;background:var(--og);border:1px solid rgba(255,140,0,.3);padding:5px 12px 5px 5px;border-radius:50px;}
+.logout-btn{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:5px 11px;border-radius:50px;font-weight:800;font-size:.72rem;cursor:pointer;margin-left:4px;transition:.2s;}
+.logout-btn:hover{background:rgba(239,68,68,.3);}
+.uav{width:26px;height:26px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.75rem;color:#000;}
+
+/* ── SPIN ARENA ── */
+.arena{margin:1rem;background:linear-gradient(160deg,#0c0e15,#11131d);border:1px solid var(--border);border-radius:24px;padding:1.5rem 1rem;text-align:center;position:relative;overflow:hidden;}
+.arena::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:320px;height:320px;background:radial-gradient(circle,rgba(255,140,0,.07),transparent 70%);pointer-events:none;}
+.player-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(0,0,0,.4);border:1px solid var(--border);padding:6px 16px;border-radius:50px;font-size:.78rem;font-weight:700;color:var(--muted);margin-bottom:1.2rem;}
+.player-tag span{color:var(--orange);}
+
+/* GACHA BOX */
+.gbox{width:160px;height:160px;margin:0 auto 1.2rem;background:linear-gradient(135deg,#1a2236,#0a0d14);border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid #1e293b;transition:border-color .4s,box-shadow .4s;position:relative; cursor:pointer;}
+.gbox-icon{font-size:3.5rem;line-height:1;display:block;}
+.gbox-name{font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:900;margin-top:6px;text-transform:uppercase;display:none;}
+@keyframes shake{0%{transform:rotate(-2deg) scale(1.02);}50%{transform:rotate(2deg) scale(.98);}100%{transform:rotate(-2deg) scale(1.02);}}
+.spinning{animation:shake .2s infinite;}
+
+/* SPIN BUTTON */
+.spin-btn{background:linear-gradient(45deg,var(--orange),#e67000);color:#000;border:none;padding:15px 44px;font-size:1.2rem;font-family:'Outfit',sans-serif;font-weight:900;border-radius:16px;cursor:pointer;box-shadow:0 10px 25px rgba(255,140,0,.3);transition:.2s;text-transform:uppercase;letter-spacing:1px;position:relative;z-index:2;}
+.spin-btn:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 16px 35px rgba(255,140,0,.4);}
+.spin-btn:disabled{background:#1e293b;color:var(--muted);box-shadow:none;transform:none;cursor:not-allowed;}
+.spin-info{margin-top:.7rem;font-size:.78rem;color:var(--muted);display:flex;flex-direction:column;gap:3px;}
+.spin-info b{color:var(--orange);}
+.free-timer{font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:800;color:var(--orange);margin-top:.5rem;min-height:20px;}
+
+/* ── TABS ── */
+.tabs-row{display:flex;margin:0 1rem .8rem;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:4px;gap:4px;}
+.tabb{flex:1;padding:9px 5px;border:none;background:none;color:var(--muted);font-weight:800;font-size:.75rem;border-radius:10px;cursor:pointer;transition:.2s;text-transform:uppercase;letter-spacing:.5px;}
+.tabb.on{background:var(--orange);color:#000;}
+
+/* ── VAULT ── */
+.section{margin:0 1rem 1rem;}
+.sec-title{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:900;margin-bottom:.7rem;display:flex;align-items:center;gap:8px;}
+.sec-title i{color:var(--orange);}
+.vault-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.vslot{background:var(--card);border:1.5px solid var(--border);border-radius:14px;padding:.9rem .5rem;text-align:center;transition:.2s;}
+.vslot:hover{transform:translateY(-2px);}
+.vslot .vi{font-size:1.8rem;line-height:1;display:block;margin-bottom:4px;}
+.vslot .vn{font-weight:800;font-size:.72rem;color:var(--text);margin-bottom:2px;}
+.vslot .vr{font-size:.62rem;font-weight:700;text-transform:uppercase;}
+/* rarity borders */
+.bs{border-color:var(--spy)!important;box-shadow:0 0 14px rgba(255,170,0,.2);}
+.bm{border-color:var(--mythical)!important;}
+.bl{border-color:var(--legendary)!important;}
+.br{border-color:var(--rare)!important;}
+/* rarity text */
+.cs{color:var(--spy);}.cm2{color:var(--mythical);}.cl{color:var(--legendary);}.cr{color:var(--rare);}.cu{color:var(--uncommon);}.cc{color:var(--common);}
+.empty-v{grid-column:span 3;text-align:center;padding:2rem;color:var(--muted);}
+
+/* ── HISTORY ── */
+.hist-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.8rem 1rem;display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+
+/* ── MODALS ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);z-index:600;display:none;align-items:center;justify-content:center;padding:1.5rem;}
+.modal-box{background:var(--card2);border-radius:26px;padding:2rem 1.5rem;width:100%;max-width:340px;text-align:center;border:2px solid var(--border);}
+.m-emoji{font-size:5rem;line-height:1;margin-bottom:.8rem;}
+.m-name{font-family:'Outfit',sans-serif;font-size:1.9rem;font-weight:900;}
+.m-rar{font-size:.78rem;font-weight:800;text-transform:uppercase;letter-spacing:2px;margin:.3rem 0 .5rem;}
+.m-val{color:var(--orange);font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:900;margin-bottom:1.2rem;}
+.m-close{width:100%;padding:13px;background:var(--orange);color:#000;border:none;border-radius:14px;font-weight:900;font-size:.95rem;cursor:pointer;}
+
+.wide-btn{width:100%;padding:13px;background:var(--orange);color:#000;border:none;border-radius:12px;font-weight:900;font-size:.9rem;cursor:pointer;transition:.2s;}
+.wide-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 18px rgba(255,140,0,.3);}
+.wide-btn:disabled{background:#1e293b;color:var(--muted);transform:none;box-shadow:none;cursor:not-allowed;}
+.wide-btn-green{background:var(--green);color:#000;}
+.cancel-btn{width:100%;padding:10px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:12px;font-weight:700;cursor:pointer;margin-top:6px;}
+
+/* ── BOTTOM NAV ── */
+.bnav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);background:rgba(10,11,18,.98);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:center;z-index:200;}
+.nb{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;text-decoration:none;color:var(--muted);flex:1;}
+.nb i{font-size:1.1rem;}.nb span{font-size:.56rem;font-weight:700;text-transform:uppercase;}
+.nb.on{color:var(--orange);}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:calc(var(--nav-h)+12px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--orange);color:var(--text);padding:10px 20px;border-radius:12px;font-weight:700;font-size:.82rem;z-index:999;opacity:0;transition:.3s;white-space:nowrap;pointer-events:none;max-width:92vw;text-align:center;}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+#toast.err{border-color:var(--red);}#toast.ok{border-color:var(--green);}
+
+/* BLOCKER */
+.blocker{margin:1.5rem;background:var(--card);border:1px dashed rgba(255,140,0,.4);border-radius:24px;padding:3rem 1.5rem;text-align:center;}
+.blocker i{font-size:3rem;color:var(--orange);display:block;margin-bottom:1rem;}
+.blocker h2{font-family:'Outfit',sans-serif;font-size:1.5rem;margin-bottom:.5rem;}
+.blocker p{color:var(--muted);font-size:.85rem;margin-bottom:1.5rem;}
+.btn-o{background:var(--orange);color:#000;padding:11px 26px;border-radius:12px;font-weight:800;font-size:.85rem;text-decoration:none;display:inline-flex;align-items:center;gap:7px;}
+
+@media(min-width:600px){.vault-grid{grid-template-columns:repeat(4,1fr);}}
+@media(min-width:900px){body{max-width:860px;margin:0 auto;}.vault-grid{grid-template-columns:repeat(5,1fr);}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">SPYRA<span>Z</span></div>
+  <div class="hdr-right">
+    <div class="coin-pill" id="coinBar"><i class="fas fa-coins"></i><span id="coinCount">0</span></div>
+    <a href="login.html" class="login-pill" id="loginBtn"><i class="fas fa-user"></i> Login</a>
+    <div class="user-pill" id="userPill"><div class="uav" id="uAvatar">S</div><span style="font-weight:800;font-size:.78rem;color:#fff;" id="uName">User</span><button class="logout-btn" onclick="doLogout()">⏻</button></div>
+  </div>
+</header>
+
+<div id="blockerSec" style="display:none;">
+  <div class="blocker"><i class="fas fa-lock"></i><h2>Login Required</h2><p>Login to spin and win fruits!</p><a href="login.html" class="btn-o"><i class="fas fa-sign-in-alt"></i> Login</a></div>
+</div>
+
+<div id="mainContent" style="display:none;">
+
+  <div class="arena">
+    <div class="player-tag">Spinning as: <span id="spinnerName">Player</span></div>
+    <div class="gbox" id="gachaBox" onclick="handleSecretClick()">
+      <span class="gbox-icon" id="gIcon">❓</span>
+      <span class="gbox-name" id="gName"></span>
+    </div>
+    <button class="spin-btn" id="spinBtn" onclick="openSpinChoice()">🎰 SPIN</button>
+    <div class="spin-info">
+      <span>Paid spin: <b id="spinCostLabel">1,000</b> coins · <span style="color:var(--muted);font-size:.75rem;">2 min cooldown</span></span>
+      <span>Free spin: <b id="freeSpin">checking...</b></span>
+    </div>
+    <div class="free-timer" id="paidTimer"></div>
+    <div class="free-timer" id="freeTimer"></div>
+  </div>
+
+  <div class="tabs-row">
+    <button class="tabb on" onclick="switchTab('vault',this)">🗃️ VAULT</button>
+    <button class="tabb" onclick="switchTab('history',this)">📋 HISTORY</button>
+  </div>
+
+  <div id="tab-vault" class="section">
+    <div class="sec-title"><i class="fas fa-box-open"></i> Your Vault</div>
+    <div class="vault-grid" id="vaultGrid">
+      <div class="empty-v">Spin to fill your vault!</div>
+    </div>
+  </div>
+
+  <div id="tab-history" class="section" style="display:none;">
+    <div class="sec-title"><i class="fas fa-history"></i> Spin History</div>
+    <div id="histList"><p style="text-align:center;color:var(--muted);padding:1.5rem;">No spins yet.</p></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="spinChoiceModal">
+  <div class="modal-box" style="padding: 1.5rem;">
+    <h3 style="margin-bottom: 1rem;">Choose Your Spin</h3>
+    <button class="wide-btn" id="btnPaidSpin" onclick="executeSpin('paid')">🪙 Spin (1,000 Coins)</button>
+    <button class="wide-btn wide-btn-green" id="btnFreeSpin" style="margin-top:10px;" onclick="executeSpin('free')">🎁 Free Spin</button>
+    <button class="cancel-btn" onclick="document.getElementById('spinChoiceModal').style.display='none'">Cancel</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="resultModal">
+  <div class="modal-box" id="resultBox">
+    <div class="m-emoji" id="mEmoji">🎁</div>
+    <div class="m-name" id="mName">-</div>
+    <div class="m-rar" id="mRar">-</div>
+    <div class="m-val" id="mVal"></div>
+    <p style="color:var(--muted);font-size:.82rem;margin-bottom:1.2rem;">Added to your Vault! ✅</p>
+    <button class="m-close" onclick="closeModal()">AWESOME! 🔥</button>
+  </div>
+</div>
+
+<nav class="bnav">
+  <a href="index.html" class="nb"><i class="fas fa-house"></i><span>Home</span></a>
+  <a href="giveaway.html" class="nb"><i class="fas fa-gift"></i><span>Win</span></a>
+  <a href="spin.html" class="nb on"><i class="fas fa-rotate"></i><span>Spin</span></a>
+  <a href="chat.html" class="nb"><i class="fas fa-comment-dots"></i><span>Chat</span></a>
+  <a href="market.html" class="nb"><i class="fas fa-shop"></i><span>Market</span></a>
+  <a href="trade.html" class="nb"><i class="fas fa-repeat"></i><span>Trade</span></a>
+  <a href="sell.html" class="nb"><i class="fas fa-sack-dollar"></i><span>Sell</span></a>
+</nav>
+<div id="toast"></div>
+
+<script>
+// ── FIREBASE MULTI-CDN LOADER ──
+(function(){var C=[['https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js','https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js','https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js'],['https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/app.min.js','https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/auth.min.js','https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/database.min.js'],['https://unpkg.com/firebase@9.23.0/compat/app.js','https://unpkg.com/firebase@9.23.0/compat/auth.js','https://unpkg.com/firebase@9.23.0/compat/database.js']];
+function ls(u){return new Promise(function(r,j){var s=document.createElement('script');s.src=u;s.onload=r;s.onerror=j;document.head.appendChild(s);});}
+function lc(i){if(i>=C.length)return;ls(C[i][0]).then(function(){return ls(C[i][1]);}).then(function(){return ls(C[i][2]);}).then(function(){window._fbReady=true;document.dispatchEvent(new Event('fbReady'));}).catch(function(){lc(i+1);});}lc(0);})();
+</script>
+<script>
+// ══════════════════════════════════════════
+// ALL 43 BLOX FRUITS (Value = spin cost)
+// ══════════════════════════════════════════
+var FRUITS = [
+  // SPY — PRICELESS
+  {name:'Spy',     value:0,      rarity:'spy',      emoji:'🕵️', weight:0.3},
+  // MYTHICAL
+  {name:'West Dragon', value:35100000, rarity:'mythical', emoji:'🐲', weight:0.1},
+  {name:'East Dragon', value:30500000, rarity:'mythical', emoji:'🐉', weight:0.1},
+  {name:'Kitsune', value:4600000,rarity:'mythical', emoji:'🦊', weight:1},
+  // LEGENDARY
+  {name:'Tiger',   value:1600000,rarity:'legendary',emoji:'🐯', weight:2},
+  {name:'Yeti',    value:1500000,rarity:'legendary',emoji:'❄️', weight:2},
+  {name:'Control', value:1400000,rarity:'legendary',emoji:'🎮', weight:2},
+  {name:'Lightning',value:800000,rarity:'legendary',emoji:'⚡', weight:3},
+  {name:'Gas',     value:600000, rarity:'legendary',emoji:'💨', weight:3},
+  {name:'Dough',   value:300000, rarity:'legendary',emoji:'🍞', weight:4},
+  {name:'Venom',   value:200000, rarity:'legendary',emoji:'🐍', weight:5},
+  {name:'T-Rex',   value:200000, rarity:'legendary',emoji:'🦖', weight:5},
+  {name:'Pain',    value:100000, rarity:'legendary',emoji:'💢', weight:7},
+  {name:'Spirit',  value:100000, rarity:'legendary',emoji:'👻', weight:7},
+  {name:'Mammoth', value:100000, rarity:'legendary',emoji:'🦣', weight:7},
+  {name:'Portal',  value:100000, rarity:'legendary',emoji:'🌀', weight:7},
+  {name:'Buddha',  value:100000, rarity:'legendary',emoji:'☯️', weight:7},
+  {name:'Gravity', value:100000, rarity:'legendary',emoji:'🌍', weight:7},
+  {name:'Shadow',  value:65000,  rarity:'legendary',emoji:'🌑', weight:90},
+  {name:'Blizzard',value:50000,  rarity:'legendary',emoji:'🌨️', weight:90},
+  // RARE
+  {name:'Creation',value:35000,  rarity:'rare',     emoji:'✨', weight:130},
+  {name:'Phoenix', value:27500,  rarity:'rare',     emoji:'🦅', weight:150},
+  {name:'Sound',   value:25000,  rarity:'rare',     emoji:'🎵', weight:170},
+  {name:'Love',    value:15000,  rarity:'rare',     emoji:'💕', weight:200},
+  {name:'Spider',  value:15000,  rarity:'rare',     emoji:'🕷️', weight:200},
+  {name:'Magma',   value:11500,  rarity:'rare',     emoji:'🌋', weight:220},
+  {name:'Quake',   value:10000,  rarity:'rare',     emoji:'🏔️', weight:240},
+  {name:'Diamond', value:10000,  rarity:'rare',     emoji:'💎', weight:240},
+  {name:'Light',   value:8000,   rarity:'rare',     emoji:'💡', weight:260},
+  {name:'Ghost',   value:8000,   rarity:'rare',     emoji:'👻', weight:260},
+  {name:'Eagle',   value:8000,   rarity:'rare',     emoji:'🦅', weight:260},
+  // UNCOMMON
+  {name:'Rubber',  value:7000,   rarity:'uncommon', emoji:'🪃', weight:320},
+  {name:'Ice',     value:5500,   rarity:'uncommon', emoji:'🧊', weight:380},
+  {name:'Sand',    value:4200,   rarity:'uncommon', emoji:'🏖️', weight:440},
+  {name:'Dark',    value:4000,   rarity:'uncommon', emoji:'🌙', weight:460},
+  {name:'Flame',   value:2500,   rarity:'uncommon', emoji:'🔥', weight:550},
+  // COMMON
+  {name:'Spike',   value:1800,   rarity:'common',   emoji:'🦔', weight:700},
+  {name:'Smoke',   value:1000,   rarity:'common',   emoji:'💨', weight:850},
+  {name:'Bomb',    value:800,    rarity:'common',   emoji:'💣', weight:900},
+  {name:'Spring',  value:600,    rarity:'common',   emoji:'🌀', weight:950},
+  {name:'Blade',   value:500,    rarity:'common',   emoji:'⚔️', weight:1000},
+  {name:'Spin',    value:75,     rarity:'common',   emoji:'🔄', weight:1250},
+  {name:'Rocket',  value:50,     rarity:'common',   emoji:'🚀', weight:1300}
+];
+
+// Updated spin cost to 1000
+var SPIN_COST = 1000;
+var FREE_SPIN_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
+var PAID_SPIN_INTERVAL_MS = 2 * 60 * 1000;  // 2 minutes between paid spins
+
+var db,auth,myUid,myData={},myCoins=0,spinning=false,timerInt=null;
+var secretClicks = 0;
+var secretTimer = null;
+
+// ── Admin Secret Spin ──
+function handleSecretClick() {
+  if (spinning) return;
+  secretClicks++;
+  clearTimeout(secretTimer);
+  secretTimer = setTimeout(function() { secretClicks = 0; }, 600);
+  
+  if (secretClicks >= 35) {
+    secretClicks = 0;
+    var pwd = prompt("Admin Override: Enter Password");
+    // Simple hash check so password not visible in plain source
+    var h=0; if(pwd){for(var ci=0;ci<pwd.length;ci++){h=((h<<5)-h)+pwd.charCodeAt(ci);h|=0;}} 
+    if (h === 1952734322) {
+      executeSpin('admin');
+    } else if (pwd !== null) {
+      toast("Access Denied.", "err");
+    }
+  }
+}
+
+// ── Rarity helpers ──
+function rarC(r){
+  if(r==='spy')return 'cs';
+  if(r==='mythical')return 'cm2';
+  if(r==='legendary')return 'cl';
+  if(r==='rare')return 'cr';
+  if(r==='uncommon')return 'cu';
+  return 'cc';
+}
+function rarB(r){
+  if(r==='spy')return 'bs';
+  if(r==='mythical')return 'bm';
+  if(r==='legendary')return 'bl';
+  if(r==='rare')return 'br';
+  return '';
+}
+function fmtVal(v){
+  if(!v||v===0)return '✨ Priceless';
+  if(v>=1000000)return '🪙 '+(v/1000000).toFixed(1)+'M';
+  if(v>=1000)return '🪙 '+(v/1000).toFixed(0)+'K';
+  return '🪙 '+v;
+}
+
+// ── Roll ──
+function rollFruit(){
+  var total=FRUITS.reduce(function(a,f){return a+f.weight;},0);
+  var r=Math.random()*total,acc=0;
+  for(var i=0;i<FRUITS.length;i++){acc+=FRUITS[i].weight;if(r<=acc)return FRUITS[i];}
+  return FRUITS[FRUITS.length-1];
+}
+
+// ── Toast ──
+function toast(m,t){
+  var el=document.getElementById('toast');el.textContent=m;el.className='on '+(t||'');
+  clearTimeout(el._t);el._t=setTimeout(function(){el.className='';},3000);
+}
+
+// ── Tab switch ──
+function switchTab(n,btn){
+  document.getElementById('tab-vault').style.display='none';
+  document.getElementById('tab-history').style.display='none';
+  document.querySelectorAll('.tabb').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('tab-'+n).style.display='block';
+  btn.classList.add('on');
+  if(n==='history')loadHistory();
+}
+
+// ── Free spin timer ──
+var paidTimerInt=null;
+function updateFreeSpinUI(){
+  var lastFree=myData.lastFreeSpin||0;
+  var now=Date.now();
+  var diff=now-lastFree;
+  var remaining=FREE_SPIN_INTERVAL_MS-diff;
+  clearInterval(timerInt);
+
+  if(remaining<=0){
+    document.getElementById('freeSpin').textContent='Ready! 🎉';
+    document.getElementById('freeTimer').textContent='';
+    document.getElementById('spinBtn').disabled=false;
+  } else {
+    document.getElementById('freeSpin').textContent='cooldown';
+    function tick(){
+      var r=FREE_SPIN_INTERVAL_MS-(Date.now()-lastFree);
+      if(r<=0){clearInterval(timerInt);document.getElementById('freeSpin').textContent='Ready! 🎉';document.getElementById('freeTimer').textContent='';return;}
+      var h=Math.floor(r/3600000);var m=Math.floor((r%3600000)/60000);var s=Math.floor((r%60000)/1000);
+      document.getElementById('freeTimer').textContent='⏱ Next free spin: '+(h>0?h+'h ':'')+m+'m '+s+'s';
+    }
+    tick();timerInt=setInterval(tick,1000);
+  }
+
+  // Paid spin cooldown timer
+  var lastPaid=myData.lastPaidSpin||0;
+  var paidRemaining=PAID_SPIN_INTERVAL_MS-(Date.now()-lastPaid);
+  clearInterval(paidTimerInt);
+  if(paidRemaining<=0){
+    document.getElementById('paidTimer').textContent='';
+  } else {
+    function paidTick(){
+      var rp=PAID_SPIN_INTERVAL_MS-(Date.now()-lastPaid);
+      if(rp<=0){clearInterval(paidTimerInt);document.getElementById('paidTimer').textContent='';return;}
+      var mp=Math.floor(rp/60000);var sp=Math.floor((rp%60000)/1000);
+      document.getElementById('paidTimer').textContent='🪙 Next paid spin: '+mp+'m '+sp+'s';
+    }
+    paidTick();paidTimerInt=setInterval(paidTick,1000);
+  }
+}
+
+// ── Spin UI Modal ──
+function openSpinChoice() {
+  var lastFree = myData.lastFreeSpin || 0;
+  var hasFree = (Date.now() - lastFree) >= FREE_SPIN_INTERVAL_MS;
+  var lastPaid = myData.lastPaidSpin || 0;
+  var hasPaid = (Date.now() - lastPaid) >= PAID_SPIN_INTERVAL_MS;
+
+  var paidBtn = document.getElementById('btnPaidSpin');
+  if (!hasPaid) {
+    paidBtn.disabled = true;
+    var rp = PAID_SPIN_INTERVAL_MS - (Date.now() - lastPaid);
+    var mp = Math.floor(rp/60000); var sp = Math.floor((rp%60000)/1000);
+    paidBtn.innerHTML = '⏳ Paid Spin in ' + mp + 'm ' + sp + 's';
+  } else if (myCoins >= SPIN_COST) {
+    paidBtn.disabled = false;
+    paidBtn.innerHTML = '🪙 Paid Spin ('+SPIN_COST.toLocaleString()+' Coins)';
+  } else {
+    paidBtn.disabled = true;
+    paidBtn.innerHTML = '❌ Need '+SPIN_COST.toLocaleString()+' Coins';
+  }
+
+  var freeBtn = document.getElementById('btnFreeSpin');
+  if (hasFree) {
+    freeBtn.disabled = false;
+    freeBtn.innerHTML = '🎁 Free Spin (Ready!)';
+  } else {
+    freeBtn.disabled = true;
+    var r = FREE_SPIN_INTERVAL_MS - (Date.now() - lastFree);
+    var m = Math.floor((r % 3600000) / 60000);
+    freeBtn.innerHTML = '⏳ Free Spin in ' + m + 'm';
+  }
+
+  document.getElementById('spinChoiceModal').style.display = 'flex';
+}
+
+// ── Execute Spin ──
+async function executeSpin(type) {
+  document.getElementById('spinChoiceModal').style.display = 'none';
+  if(spinning) return;
+  
+  var lastFree = myData.lastFreeSpin || 0;
+  var hasFree = (Date.now() - lastFree) >= FREE_SPIN_INTERVAL_MS;
+  var lastPaid = myData.lastPaidSpin || 0;
+  var hasPaid = (Date.now() - lastPaid) >= PAID_SPIN_INTERVAL_MS;
+  var isPaid = (type === 'paid');
+  var isFree = (type === 'free');
+  var isAdmin = (type === 'admin');
+
+  if(isPaid && myCoins < SPIN_COST){
+    toast('Not enough coins!', 'err'); return;
+  }
+  if(isPaid && !hasPaid){
+    var rp=PAID_SPIN_INTERVAL_MS-(Date.now()-lastPaid);
+    var mp=Math.floor(rp/60000);var sp=Math.floor((rp%60000)/1000);
+    toast('Paid spin cooldown! Wait '+mp+'m '+sp+'s','err'); return;
+  }
+  if(isFree && !hasFree){
+    toast('Free spin is still on cooldown!', 'err'); return;
+  }
+
+  spinning=true;
+  var btn=document.getElementById('spinBtn');btn.disabled=true;
+  var box=document.getElementById('gachaBox');
+  box.classList.add('spinning');
+  document.getElementById('gIcon').textContent='❓';
+  document.getElementById('gName').style.display='none';
+
+  await new Promise(function(r){setTimeout(r,1600);});
+  box.classList.remove('spinning');
+
+  var fruit;
+  if (isAdmin) {
+    fruit = FRUITS.find(function(f) { return f.rarity === 'spy'; });
+  } else {
+    fruit = rollFruit();
+  }
+  
+  var rc=rarC(fruit.rarity);
+  document.getElementById('gIcon').textContent=fruit.emoji;
+  document.getElementById('gName').textContent=fruit.name;
+  document.getElementById('gName').className='gbox-name '+rc;
+  document.getElementById('gName').style.display='block';
+
+  // Glow box
+  var borderMap={spy:'var(--spy)',mythical:'var(--mythical)',legendary:'var(--legendary)',rare:'var(--rare)'};
+  box.style.borderColor=borderMap[fruit.rarity]||'#1e293b';
+  box.style.boxShadow=borderMap[fruit.rarity]?'0 0 30px '+borderMap[fruit.rarity]+'55':'none';
+
+  // Firebase save
+  var key='f'+Date.now();
+  var updates={};
+  if(isFree){
+    updates['users/'+myUid+'/lastFreeSpin'] = Date.now();
+    myData.lastFreeSpin = Date.now();
+  } else if (isPaid) {
+    updates['users/'+myUid+'/coils'] = myCoins - SPIN_COST;
+    updates['users/'+myUid+'/lastPaidSpin'] = Date.now();
+    myData.lastPaidSpin = Date.now();
+    myCoins -= SPIN_COST;
+    document.getElementById('coinCount').textContent = myCoins.toLocaleString();
+  }
+  
+  updates['users/'+myUid+'/inventory/'+key]={fruitName:fruit.name,rarity:fruit.rarity,emoji:fruit.emoji,value:fruit.value,obtainedAt:Date.now()};
+  updates['spinHistory/'+myUid+'/'+key]={fruitName:fruit.name,rarity:fruit.rarity,emoji:fruit.emoji,value:fruit.value,paid:isPaid,timestamp:Date.now()};
+  
+  await db.ref().update(updates);
+
+  showResult(fruit, isPaid, isAdmin);
+  loadVault();
+  updateFreeSpinUI();
+  spinning=false;
+  
+  // Re-enable only if has coins or free spin ready
+  setTimeout(function(){
+    var stillFree=(Date.now()-(myData.lastFreeSpin||0))>=FREE_SPIN_INTERVAL_MS;
+    btn.disabled=!stillFree&&myCoins<SPIN_COST;
+  },200);
+}
+
+// ── Result modal ──
+function showResult(fruit, paid, admin){
+  var rc=rarC(fruit.rarity);
+  document.getElementById('mEmoji').textContent=fruit.emoji;
+  document.getElementById('mName').textContent=fruit.name;
+  document.getElementById('mName').className='m-name '+rc;
+  document.getElementById('mRar').textContent=fruit.rarity.toUpperCase();
+  document.getElementById('mRar').className='m-rar '+rc;
+  
+  var context = paid ? ' · Paid spin' : ' · Free spin!';
+  if (admin) context = ' · Admin Override!';
+  
+  document.getElementById('mVal').textContent=fmtVal(fruit.value) + context;
+  
+  var bm={spy:'var(--spy)',mythical:'var(--mythical)',legendary:'var(--legendary)',rare:'var(--rare)'};
+  document.getElementById('resultBox').style.borderColor=bm[fruit.rarity]||'var(--border)';
+  document.getElementById('resultModal').style.display='flex';
+}
+function closeModal(){document.getElementById('resultModal').style.display='none';}
+
+// ── Vault ──
+function loadVault(){
+  var g=document.getElementById('vaultGrid');
+  db.ref('users/'+myUid+'/inventory').once('value',function(s){
+    if(!s.exists()||!s.val()){g.innerHTML='<div class="empty-v">🎲 Spin to fill your vault!</div>';return;}
+    var items=Object.entries(s.val()).sort(function(a,b){return b[1].obtainedAt-a[1].obtainedAt;});
+    g.innerHTML='';
+    items.forEach(function(pair){
+      var k=pair[0],f=pair[1];
+      var rc=rarC(f.rarity),rb=rarB(f.rarity);
+      g.innerHTML+='<div class="vslot '+rb+'">'+
+        '<span class="vi">'+(f.emoji||'🍎')+'</span>'+
+        '<div class="vn">'+escH(f.fruitName||'?')+'</div>'+
+        '<div class="vr '+rc+'">'+(f.rarity||'')+'</div>'+
+        '<div style="font-size:.6rem;color:var(--muted);margin-top:2px;">'+fmtVal(f.value||0)+'</div>'+
+      '</div>';
+    });
+  });
+}
+
+// ── History ──
+function loadHistory(){
+  var list=document.getElementById('histList');
+  list.innerHTML='<p style="text-align:center;color:var(--muted);padding:1rem;">Loading...</p>';
+  db.ref('spinHistory/'+myUid).limitToLast(50).once('value',function(s){
+    if(!s.exists()){list.innerHTML='<p style="text-align:center;color:var(--muted);padding:1.5rem;">No spins yet.</p>';return;}
+    var items=[];s.forEach(function(c){items.unshift(Object.assign({key:c.key},c.val()));});
+    list.innerHTML='';
+    items.forEach(function(e){
+      var rc=rarC(e.rarity);
+      list.innerHTML+='<div class="hist-item">'+
+        '<div style="display:flex;align-items:center;gap:8px;">'+
+          '<span style="font-size:1.2rem;">'+(e.emoji||'🍎')+'</span>'+
+          '<div><strong class="'+rc+'" style="font-size:.88rem;display:block;">'+escH(e.fruitName)+'</strong>'+
+          '<span style="font-size:.7rem;color:var(--muted);">'+e.rarity+(e.paid?' · Paid':' · Free')+'</span></div>'+
+        '</div>'+
+        '<div style="text-align:right;"><div style="font-size:.68rem;color:var(--muted);">'+new Date(e.timestamp).toLocaleDateString()+'</div>'+
+        '<div style="font-size:.7rem;color:var(--orange);">'+fmtVal(e.value||0)+'</div></div>'+
+      '</div>';
+    });
+  });
+}
+
+function escH(t){var d=document.createElement('div');d.appendChild(document.createTextNode(t||''));return d.innerHTML;}
+
+// ── Boot ──
+function bootApp(){
+  firebase.initializeApp({apiKey:"AIzaSyBvRRGp7Di6QK6LvbLIl8jyalkYmUkYISw",authDomain:"spyraz-4d24e.firebaseapp.com",databaseURL:"https://spyraz-4d24e-default-rtdb.firebaseio.com/",projectId:"spyraz-4d24e",storageBucket:"spyraz-4d24e.firebasestorage.app",messagingSenderId:"533558439070",appId:"1:533558439070:web:382971879027a158ad9f8f"});
+  auth=firebase.auth();db=firebase.database();
+
+  document.getElementById('spinCostLabel').textContent=SPIN_COST.toLocaleString();
+
+  auth.onAuthStateChanged(function(user){
+    if(user){
+      myUid=user.uid;
+      document.getElementById('loginBtn').style.display='none';
+      document.getElementById('userPill').style.display='flex';
+      document.getElementById('coinBar').style.display='flex';
+      document.getElementById('blockerSec').style.display='none';
+      document.getElementById('mainContent').style.display='block';
+
+      db.ref('users/'+myUid).on('value',function(s){
+        if(!s.exists())return;
+        myData=s.val();
+        myCoins=myData.coils||0;
+        document.getElementById('uName').textContent=myData.username||'User';
+        document.getElementById('uAvatar').textContent=(myData.username||'U').charAt(0).toUpperCase();
+        document.getElementById('coinCount').textContent=myCoins.toLocaleString();
+        document.getElementById('spinnerName').textContent=myData.username||'Player';
+        updateFreeSpinUI();
+        loadVault();
+      });
+    } else {
+      document.getElementById('loginBtn').style.display='flex';
+      document.getElementById('userPill').style.display='none';
+      document.getElementById('coinBar').style.display='none';
+      document.getElementById('blockerSec').style.display='block';
+      document.getElementById('mainContent').style.display='none';
+    }
+  });
+}
+if(window._fbReady){bootApp();}else{document.addEventListener('fbReady',bootApp);}
+function doLogout(){firebase.auth().signOut().then(function(){window.location.href='login.html';});}
+</script>
+</body>
+</html>

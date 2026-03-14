@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>SpyraZ | Sell</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+:root{--bg:#07080d;--card:#0f1118;--card2:#161b24;--border:rgba(255,255,255,0.06);--orange:#ff8c00;--og:rgba(255,140,0,0.1);--text:#f1f5f9;--muted:#64748b;--green:#00cc88;--red:#ef4444;--nav-h:64px;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent;}
+/* Fixed Mobile Overlap */
+body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:120px;}
+
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:.75rem 1rem;background:rgba(7,8,13,.97);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:120;}
+.logo{font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:900;color:#fff;}.logo span{color:var(--orange);}
+.login-pill{background:var(--orange);color:#000;padding:7px 16px;border-radius:50px;font-weight:800;font-size:.78rem;text-decoration:none;}
+.user-pill{display:none;align-items:center;gap:7px;background:var(--og);border:1px solid rgba(255,140,0,.3);padding:5px 12px 5px 5px;border-radius:50px;}
+.logout-btn{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:5px 11px;border-radius:50px;font-weight:800;font-size:.72rem;cursor:pointer;margin-left:4px;transition:.2s;}
+.logout-btn:hover{background:rgba(239,68,68,.3);}
+.uav{width:26px;height:26px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.75rem;color:#000;}
+.page-hero{margin:1rem;background:linear-gradient(135deg,#0a0c14,#150500);border:1px solid rgba(255,140,0,.2);border-radius:22px;padding:1.6rem 1.2rem;}
+.page-hero h1{font-family:'Outfit',sans-serif;font-size:1.7rem;font-weight:900;margin-bottom:.3rem;}
+.page-hero p{color:var(--muted);font-size:.83rem;line-height:1.6;}
+.blocker{margin:1rem;background:var(--card);border:1px dashed rgba(255,140,0,.4);border-radius:22px;padding:2.5rem 1.5rem;text-align:center;}
+.blocker i{font-size:2.8rem;color:var(--orange);display:block;margin-bottom:.8rem;}
+.blocker h2{font-family:'Outfit',sans-serif;font-size:1.4rem;margin-bottom:.4rem;}
+.blocker p{color:var(--muted);font-size:.84rem;margin-bottom:1.2rem;}
+.btn-o{background:var(--orange);color:#000;padding:11px 24px;border-radius:12px;font-weight:800;font-size:.85rem;text-decoration:none;display:inline-flex;align-items:center;gap:7px;}
+.tabs-row{display:flex;margin:0 1rem .8rem;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:4px;gap:4px;}
+.tabb{flex:1;padding:9px 5px;border:none;background:none;color:var(--muted);font-weight:800;font-size:.75rem;border-radius:10px;cursor:pointer;transition:.2s;text-transform:uppercase;}
+.tabb.on{background:var(--orange);color:#000;}
+.sec{margin:0 1rem 1rem;}
+.how-it-works{background:var(--og);border:1px solid rgba(255,140,0,.2);border-radius:16px;padding:1rem;margin-bottom:1rem;}
+.how-it-works h4{font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:900;color:var(--orange);margin-bottom:.6rem;}
+.how-it-works ol{padding-left:1.2rem;display:flex;flex-direction:column;gap:5px;}
+.how-it-works li{font-size:.8rem;color:var(--muted);line-height:1.5;}
+.how-it-works li strong{color:var(--text);}
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.3rem;}
+.field{margin-bottom:1rem;}
+.field label{display:block;font-size:.68rem;font-weight:800;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.field input,.field select,.field textarea{width:100%;background:rgba(0,0,0,.4);border:1.5px solid var(--border);border-radius:11px;padding:12px 14px;color:var(--text);font-size:.9rem;outline:none;transition:.2s;font-family:inherit;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--orange);}
+.field select option{background:#0f1118;}
+.field textarea{resize:vertical;min-height:75px;}
+.field input[readonly]{opacity:.6;cursor:not-allowed;}
+.info-note{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:12px;padding:.8rem;display:flex;gap:8px;align-items:flex-start;margin-bottom:1rem;}
+.info-note i{color:var(--red);flex-shrink:0;margin-top:2px;}
+.info-note p{font-size:.78rem;color:var(--muted);line-height:1.5;}
+.info-note strong{color:var(--red);}
+.wide-btn{width:100%;padding:14px;background:var(--orange);color:#000;border:none;border-radius:13px;font-weight:900;font-size:.95rem;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.wide-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px rgba(255,140,0,.3);}
+.wide-btn:disabled{background:#1e293b;color:var(--muted);transform:none;box-shadow:none;cursor:not-allowed;}
+/* LISTING CARDS */
+.listing-item{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1rem;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;}
+.listing-left .fruit-name{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:900;}
+.listing-left .fruit-sub{font-size:.75rem;color:var(--muted);margin-top:3px;}
+.spill{padding:4px 12px;border-radius:50px;font-size:.68rem;font-weight:800;text-transform:uppercase;white-space:nowrap;}
+.sp{background:rgba(255,140,0,.15);color:var(--orange);}
+.sc{background:rgba(0,204,136,.15);color:var(--green);}
+.sr{background:rgba(239,68,68,.15);color:var(--red);}
+/* CONFIRM MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.88);backdrop-filter:blur(14px);z-index:600;display:none;align-items:center;justify-content:center;padding:1.5rem;}
+.modal-box{background:var(--card2);border:1.5px solid rgba(239,68,68,.4);border-radius:24px;padding:2rem 1.5rem;width:100%;max-width:340px;text-align:center;}
+.modal-box i{font-size:2.5rem;color:var(--red);margin-bottom:.8rem;display:block;}
+.modal-box h3{font-family:'Outfit',sans-serif;font-size:1.3rem;font-weight:900;margin-bottom:.4rem;}
+.modal-box p{color:var(--muted);font-size:.83rem;line-height:1.5;margin-bottom:1.3rem;}
+.modal-box .fruit-preview{font-size:1.1rem;font-weight:900;color:var(--orange);margin-bottom:1rem;font-family:'Outfit',sans-serif;}
+.confirm-yes{width:100%;padding:13px;background:var(--orange);color:#000;border:none;border-radius:12px;font-weight:900;cursor:pointer;margin-bottom:7px;}
+.cancel-btn{width:100%;padding:11px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:12px;font-weight:700;cursor:pointer;}
+#toast{position:fixed;bottom:calc(var(--nav-h)+12px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--orange);color:var(--text);padding:10px 20px;border-radius:12px;font-weight:700;font-size:.82rem;z-index:999;opacity:0;transition:.3s;white-space:nowrap;pointer-events:none;max-width:92vw;text-align:center;}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+#toast.err{border-color:var(--red);}#toast.ok{border-color:var(--green);}
+.bnav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);background:rgba(10,11,18,.98);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:center;z-index:200;}
+.nb{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;text-decoration:none;color:var(--muted);flex:1;}
+.nb i{font-size:1.1rem;}.nb span{font-size:.56rem;font-weight:700;text-transform:uppercase;}
+.nb.on{color:var(--orange);}
+@media(min-width:900px){body{max-width:860px;margin:0 auto;}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">SPYRA<span>Z</span></div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="login.html" class="login-pill" id="loginBtn"><i class="fas fa-user"></i> Login</a>
+    <div class="user-pill" id="userPill"><div class="uav" id="uAvatar">S</div><span style="font-weight:800;font-size:.78rem;color:#fff;" id="uName">User</span><button class="logout-btn" onclick="doLogout()">⏻</button></div>
+  </div>
+</header>
+
+<div class="page-hero">
+  <h1>💰 Sell Your Fruit</h1>
+  <p>Submit the fruit you want to sell. Ashwani (SpyraZ) or an admin will contact you in-game within 48 hours to complete the deal.</p>
+</div>
+
+<div id="blockerSec" style="display:none;">
+  <div class="blocker"><i class="fas fa-lock"></i><h2>Login Required</h2><p>Login to post a sell listing.</p><a href="login.html" class="btn-o"><i class="fas fa-sign-in-alt"></i> Login</a></div>
+</div>
+
+<div id="mainContent" style="display:none;">
+  <div class="tabs-row">
+    <button class="tabb on" onclick="switchTab('post',this)">➕ Post Listing</button>
+    <button class="tabb" onclick="switchTab('listings',this)">📋 My Listings</button>
+  </div>
+
+  <div id="tab-post" class="sec">
+    <div class="how-it-works">
+      <h4>📖 How Selling Works</h4>
+      <ol>
+        <li><strong>Choose the fruit</strong> you want to sell from the list below.</li>
+        <li>Add an <strong>optional note</strong> (e.g. your availability, server).</li>
+        <li><strong>Submit</strong> — Ashwani / admin will contact you in-game within <strong>48 hours</strong>.</li>
+        <li>You will receive <strong>YOUR FRUITS BY AN ADMIN</strong>.</li>
+      </ol>
+    </div>
+
+    <div class="form-card">
+      <div class="field"><label>Your SpyraZ Username</label><input type="text" id="sUsername" readonly></div>
+      <div class="field"><label>Your Roblox ID</label><input type="text" id="sRoblox" readonly></div>
+
+      <div class="field">
+        <label>🍎 Which Fruit Are You Selling? *</label>
+        <select id="sFruit">
+          <option value="">— Select a fruit —</option>
+          <optgroup label="🕵️ SPY">
+            <option value="Spy|0|spy">🕵️ Spy — Priceless</option>
+          </optgroup>
+          <optgroup label="🔮 Mythical">
+            <option value="West Dragon|35100000|mythical">🐲 West Dragon — 35.1M</option>
+            <option value="East Dragon|30500000|mythical">🐉 East Dragon — 30.5M</option>
+            <option value="Kitsune|4600000|mythical">🦊 Kitsune — 4.6M</option>
+          </optgroup>
+          <optgroup label="💜 Legendary">
+            <option value="Tiger|1600000|legendary">🐯 Tiger — 1.6M</option>
+            <option value="Yeti|1500000|legendary">❄️ Yeti — 1.5M</option>
+            <option value="Control|1400000|legendary">🎮 Control — 1.4M</option>
+            <option value="Lightning|800000|legendary">⚡ Lightning — 800K</option>
+            <option value="Gas|600000|legendary">💨 Gas — 600K</option>
+            <option value="Dough|300000|legendary">🍞 Dough — 300K</option>
+            <option value="Venom|200000|legendary">🐍 Venom — 200K</option>
+            <option value="T-Rex|200000|legendary">🦖 T-Rex — 200K</option>
+            <option value="Pain|100000|legendary">💢 Pain — 100K</option>
+            <option value="Spirit|100000|legendary">👻 Spirit — 100K</option>
+            <option value="Mammoth|100000|legendary">🦣 Mammoth — 100K</option>
+            <option value="Portal|100000|legendary">🌀 Portal — 100K</option>
+            <option value="Buddha|100000|legendary">☯️ Buddha — 100K</option>
+            <option value="Gravity|100000|legendary">🌍 Gravity — 100K</option>
+            <option value="Shadow|65000|legendary">🌑 Shadow — 65K</option>
+            <option value="Blizzard|50000|legendary">🌨️ Blizzard — 50K</option>
+          </optgroup>
+          <optgroup label="💎 Rare">
+            <option value="Creation|35000|rare">✨ Creation — 35K</option>
+            <option value="Phoenix|27500|rare">🦅 Phoenix — 27.5K</option>
+            <option value="Sound|25000|rare">🎵 Sound — 25K</option>
+            <option value="Love|15000|rare">💕 Love — 15K</option>
+            <option value="Spider|15000|rare">🕷️ Spider — 15K</option>
+            <option value="Magma|11500|rare">🌋 Magma — 11.5K</option>
+            <option value="Quake|10000|rare">🏔️ Quake — 10K</option>
+            <option value="Diamond|10000|rare">💎 Diamond — 10K</option>
+            <option value="Light|8000|rare">💡 Light — 8K</option>
+            <option value="Ghost|8000|rare">👻 Ghost — 8K</option>
+            <option value="Eagle|8000|rare">🦅 Eagle — 8K</option>
+          </optgroup>
+          <optgroup label="💚 Uncommon">
+            <option value="Rubber|7000|uncommon">🪃 Rubber — 7K</option>
+            <option value="Ice|5500|uncommon">🧊 Ice — 5.5K</option>
+            <option value="Sand|4200|uncommon">🏖️ Sand — 4.2K</option>
+            <option value="Dark|4000|uncommon">🌙 Dark — 4K</option>
+            <option value="Flame|2500|uncommon">🔥 Flame — 2.5K</option>
+          </optgroup>
+          <optgroup label="⚪ Common">
+            <option value="Spike|1800|common">🦔 Spike — 1.8K</option>
+            <option value="Smoke|1000|common">💨 Smoke — 1K</option>
+            <option value="Bomb|800|common">💣 Bomb — 800</option>
+            <option value="Spring|600|common">🌀 Spring — 600</option>
+            <option value="Blade|500|common">⚔️ Blade — 500</option>
+            <option value="Spin|75|common">🔄 Spin — 75</option>
+            <option value="Rocket|50|common">🚀 Rocket — 50</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div id="payoutPreview" style="display:none;background:rgba(0,204,136,.07);border:1px solid rgba(0,204,136,.2);border-radius:12px;padding:.8rem;margin-bottom:1rem;font-size:.82rem;color:var(--green);">
+        <i class="fas fa-coins"></i> <span id="payoutText">You will receive: —</span>
+      </div>
+
+      <div class="field">
+        <label>📝 Note for Admin (Optional)</label>
+        <textarea id="sNote" placeholder="e.g. I'm online evenings, server: Asia, fruit has tier 1 upgrades..."></textarea>
+      </div>
+
+      <div class="info-note">
+        <i class="fas fa-triangle-exclamation"></i>
+        <p><strong>Important:</strong> Submitting this listing means you are ready to sell. Admin will add you in Roblox to complete the deal. Make sure your <strong>Roblox ID is correct</strong> — that's how we find you.</p>
+      </div>
+
+      <button class="wide-btn" id="postBtn" onclick="openConfirm()">
+        <i class="fas fa-paper-plane"></i> POST LISTING
+      </button>
+    </div>
+  </div>
+
+  <div id="tab-listings" class="sec" style="display:none;">
+    <div id="listingsList"><p style="text-align:center;color:var(--muted);padding:2rem;">No listings yet.</p></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="confirmModal">
+  <div class="modal-box">
+    <i class="fas fa-handshake"></i>
+    <h3>Confirm Listing</h3>
+    <div class="fruit-preview" id="confirmPreview">—</div>
+    <p>Admin will contact you in-game within <strong style="color:var(--text);">48 hours</strong> to complete the sale. Make sure you're reachable on Roblox.</p>
+    <button class="confirm-yes" id="confirmYes" onclick="submitListing()"><i class="fas fa-check"></i> YES, POST IT</button>
+    <button class="cancel-btn" onclick="closeConfirm()">Cancel</button>
+  </div>
+</div>
+
+<nav class="bnav">
+  <a href="index.html" class="nb"><i class="fas fa-house"></i><span>Home</span></a>
+  <a href="giveaway.html" class="nb"><i class="fas fa-gift"></i><span>Win</span></a>
+  <a href="spin.html" class="nb"><i class="fas fa-rotate"></i><span>Spin</span></a>
+  <a href="chat.html" class="nb"><i class="fas fa-comment-dots"></i><span>Chat</span></a>
+  <a href="market.html" class="nb"><i class="fas fa-shop"></i><span>Market</span></a>
+  <a href="trade.html" class="nb"><i class="fas fa-repeat"></i><span>Trade</span></a>
+  <a href="sell.html" class="nb on"><i class="fas fa-sack-dollar"></i><span>Sell</span></a>
+</nav>
+<div id="toast"></div>
+
+<script>
+(function(){var C=[['https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js','https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js','https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js'],['https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/app.min.js','https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/auth.min.js','https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/database.min.js'],['https://unpkg.com/firebase@9.23.0/compat/app.js','https://unpkg.com/firebase@9.23.0/compat/auth.js','https://unpkg.com/firebase@9.23.0/compat/database.js']];
+function ls(u){return new Promise(function(r,j){var s=document.createElement('script');s.src=u;s.onload=r;s.onerror=j;document.head.appendChild(s);});}
+function lc(i){if(i>=C.length)return;ls(C[i][0]).then(function(){return ls(C[i][1]);}).then(function(){return ls(C[i][2]);}).then(function(){window._fbReady=true;document.dispatchEvent(new Event('fbReady'));}).catch(function(){lc(i+1);});}lc(0);})();
+</script>
+<script>
+var db,auth,myUid,myData={};
+function toast(m,t){var el=document.getElementById('toast');el.textContent=m;el.className='on '+(t||'');clearTimeout(el._t);el._t=setTimeout(function(){el.className='';},3000);}
+function fmtVal(v){if(!v||v===0)return 'Priceless';if(v>=1000000)return (v/1000000).toFixed(1)+'M coins';if(v>=1000)return (v/1000).toFixed(0)+'K coins';return v+' coins';}
+
+function switchTab(n,btn){
+  ['post','listings'].forEach(function(t){document.getElementById('tab-'+t).style.display='none';});
+  document.querySelectorAll('.tabb').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('tab-'+n).style.display='block'; btn.classList.add('on');
+  if(n==='listings') loadListings();
+}
+
+// Payout preview when fruit selected
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('sFruit').addEventListener('change',function(){
+    var val=this.value;
+    var preview=document.getElementById('payoutPreview');
+    var payText=document.getElementById('payoutText');
+    if(!val){preview.style.display='none';return;}
+    var parts=val.split('|');
+    var v=parseInt(parts[1])||0;
+    if(v===0){payText.textContent='Spy Fruit — Admin will discuss value with you';preview.style.display='block';return;}
+    var payout=Math.floor(v*0.9);
+    payText.textContent='You will receive: '+fmtVal(payout)+' (90% of '+fmtVal(v)+')';
+    preview.style.display='block';
+  });
+});
+
+function openConfirm(){
+  var sel=document.getElementById('sFruit');
+  if(!sel.value){toast('Please select a fruit first!','err');return;}
+  var parts=sel.value.split('|');
+  var name=parts[0]; var v=parseInt(parts[1])||0;
+  var payout=v===0?'Priceless (discuss with admin)':fmtVal(Math.floor(v*0.9));
+  document.getElementById('confirmPreview').textContent=sel.options[sel.selectedIndex].text+' → You get: '+payout;
+  document.getElementById('confirmModal').style.display='flex';
+}
+function closeConfirm(){document.getElementById('confirmModal').style.display='none';}
+
+async function submitListing(){
+  var btn=document.getElementById('confirmYes');
+  btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Posting...';
+  try{
+    var sel=document.getElementById('sFruit');
+    var parts=sel.value.split('|');
+    var fruitName=parts[0]; var fruitValue=parseInt(parts[1])||0; var rarity=parts[2]||'unknown';
+    var payout=fruitValue===0?0:Math.floor(fruitValue*0.9);
+    var listing={
+      uid:myUid, username:myData.username, robloxId:myData.robloxId,
+      fruit:fruitName, rarity:rarity, officialValue:fruitValue, sellerPayout:payout,
+      note:document.getElementById('sNote').value||'No note',
+      status:'pending', timestamp:Date.now()
+    };
+    await db.ref('sellListings').push(listing);
+    closeConfirm();
+    toast('Listing posted! Admin contacts you within 48h ✅','ok');
+    document.getElementById('sFruit').value='';
+    document.getElementById('sNote').value='';
+    document.getElementById('payoutPreview').style.display='none';
+  }catch(e){toast('Error: '+e.message,'err');}
+  btn.disabled=false; btn.innerHTML='<i class="fas fa-check"></i> YES, POST IT';
+}
+
+function loadListings(){
+  var list=document.getElementById('listingsList');
+  if(!myUid){list.innerHTML='<p style="text-align:center;color:var(--muted);">Login to see listings.</p>';return;}
+  list.innerHTML='<p style="text-align:center;color:var(--muted);">Loading...</p>';
+  db.ref('sellListings').orderByChild('uid').equalTo(myUid).once('value',function(s){
+    if(!s.exists()){list.innerHTML='<p style="text-align:center;color:var(--muted);padding:2rem;">No listings yet.</p>';return;}
+    list.innerHTML=''; var items=[];s.forEach(function(c){items.unshift(c.val());});
+    items.forEach(function(l){
+      var sc=l.status==='completed'?'sc':l.status==='cancelled'?'sr':'sp';
+      var st=l.status==='completed'?'✅ Sold':l.status==='cancelled'?'❌ Cancelled':'⏳ Pending';
+      var payStr=l.sellerPayout?fmtVal(l.sellerPayout):'Discuss with admin';
+      list.innerHTML+=
+        '<div class="listing-item">'+
+          '<div class="listing-left">'+
+            '<div class="fruit-name">'+escH(l.fruit)+'</div>'+
+            '<div class="fruit-sub">Payout: <span style="color:var(--green);">'+payStr+'</span> · '+new Date(l.timestamp).toLocaleDateString()+'</div>'+
+          '</div>'+
+          '<span class="spill '+sc+'">'+st+'</span>'+
+        '</div>';
+    });
+  });
+}
+
+function escH(t){var d=document.createElement('div');d.appendChild(document.createTextNode(t||''));return d.innerHTML;}
+
+function bootApp(){
+  firebase.initializeApp({apiKey:"AIzaSyBvRRGp7Di6QK6LvbLIl8jyalkYmUkYISw",authDomain:"spyraz-4d24e.firebaseapp.com",databaseURL:"https://spyraz-4d24e-default-rtdb.firebaseio.com/",projectId:"spyraz-4d24e",storageBucket:"spyraz-4d24e.firebasestorage.app",messagingSenderId:"533558439070",appId:"1:533558439070:web:382971879027a158ad9f8f"});
+  auth=firebase.auth(); db=firebase.database();
+  auth.onAuthStateChanged(function(user){
+    if(user){
+      myUid=user.uid;
+      document.getElementById('loginBtn').style.display='none';
+      document.getElementById('userPill').style.display='flex';
+      document.getElementById('blockerSec').style.display='none';
+      document.getElementById('mainContent').style.display='block';
+      db.ref('users/'+myUid).on('value',function(s){
+        if(!s.exists())return; myData=s.val();
+        document.getElementById('uName').textContent=myData.username||'User';
+        document.getElementById('uAvatar').textContent=(myData.username||'U').charAt(0).toUpperCase();
+        document.getElementById('sUsername').value=myData.username||'';
+        document.getElementById('sRoblox').value=myData.robloxId||'';
+      });
+    }else{
+      document.getElementById('loginBtn').style.display='flex';
+      document.getElementById('userPill').style.display='none';
+      document.getElementById('blockerSec').style.display='block';
+      document.getElementById('mainContent').style.display='none';
+    }
+  });
+}
+if(window._fbReady){bootApp();}else{document.addEventListener('fbReady',bootApp);}
+function doLogout(){firebase.auth().signOut().then(function(){window.location.href='login.html';});}
+</script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>SpyraZ | Giveaway</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+:root{--bg:#07080d;--card:#0f1118;--card2:#161b24;--border:rgba(255,255,255,0.06);--orange:#ff8c00;--og:rgba(255,140,0,0.1);--text:#f1f5f9;--muted:#64748b;--green:#00cc88;--red:#ef4444;--nav-h:64px;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent;}
+/* Increased padding-bottom to fix mobile overlap bug */
+body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:120px;}
+
+/* ── HEADER ── */
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:.75rem 1rem;background:rgba(7,8,13,.97);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:120;}
+.logo{font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:900;color:#fff;}.logo span{color:var(--orange);}
+.login-pill{background:var(--orange);color:#000;padding:7px 16px;border-radius:50px;font-weight:800;font-size:.78rem;text-decoration:none;}
+.user-pill{display:none;align-items:center;gap:7px;background:var(--og);border:1px solid rgba(255,140,0,.3);padding:5px 12px 5px 5px;border-radius:50px;}
+.logout-btn{background:rgba(239,68,68,.15);color:#ef4444;border:1px solid rgba(239,68,68,.3);padding:5px 11px;border-radius:50px;font-weight:800;font-size:.72rem;cursor:pointer;margin-left:4px;transition:.2s;}
+.logout-btn:hover{background:rgba(239,68,68,.3);}
+.uav{width:26px;height:26px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.75rem;color:#000;}
+
+/* ── HERO & BANNER ── */
+.hero{margin:1rem;background:linear-gradient(135deg,#0a0c14,#1a0d00);border:1px solid rgba(255,140,0,.25);border-radius:22px;padding:1.8rem 1.2rem;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(255,140,0,.1),transparent 70%);pointer-events:none;}
+.hero-emoji{font-size:2.8rem;display:block;margin-bottom:.5rem;}
+.hero h1{font-family:'Outfit',sans-serif;font-size:1.9rem;font-weight:900;margin-bottom:.4rem;}
+.hero p{color:var(--muted);font-size:.84rem;line-height:1.6;}
+
+.video-banner{margin:.8rem 1rem;background:rgba(255,0,0,.06);border:1px solid rgba(255,0,0,.2);border-radius:16px;padding:1rem;display:flex;align-items:center;gap:12px;}
+.video-banner i.fa-youtube{color:#ff4444;font-size:1.8rem;flex-shrink:0;}
+.video-banner .vb-text strong{display:block;font-size:.9rem;margin-bottom:3px;font-family:'Outfit',sans-serif;font-weight:800;}
+.video-banner .vb-text p{font-size:.75rem;color:var(--muted);line-height:1.4;}
+.video-banner a{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:#ff4444;color:#fff;padding:8px 16px;border-radius:12px;font-size:.8rem;font-weight:800;text-decoration:none;margin-top:6px;white-space:nowrap;flex-shrink:0;}
+
+/* ── BLOCKER ── */
+.blocker{margin:1rem;background:var(--card);border:1px dashed rgba(255,140,0,.4);border-radius:22px;padding:2.5rem 1.5rem;text-align:center;}
+.blocker i{font-size:2.8rem;color:var(--orange);display:block;margin-bottom:.8rem;}
+.blocker h2{font-family:'Outfit',sans-serif;font-size:1.4rem;margin-bottom:.4rem;}
+.blocker p{color:var(--muted);font-size:.84rem;margin-bottom:1.2rem;}
+.btn-o{background:var(--orange);color:#000;padding:11px 24px;border-radius:12px;font-weight:800;font-size:.85rem;text-decoration:none;display:inline-flex;align-items:center;gap:7px;}
+
+/* ── TABS ── */
+.tabs-row{display:flex;margin:0 1rem .8rem;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:4px;gap:4px;}
+.tabb{flex:1;padding:10px 5px;border:none;background:none;color:var(--muted);font-weight:800;font-size:.78rem;border-radius:10px;cursor:pointer;transition:.2s;text-transform:uppercase;letter-spacing:0.5px;}
+.tabb.on{background:var(--orange);color:#000;}
+
+/* ── CONTENT ── */
+.sec{margin:0 1rem 1rem;}
+.steps-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;}
+.step-box{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:14px;padding:1rem .5rem;text-align:center;}
+.step-box .sn{font-size:1.4rem;display:block;margin-bottom:4px;}
+.step-box span{font-size:.72rem;color:var(--muted);font-weight:700;}
+.prizes-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem;}
+.prize-box{background:rgba(0,0,0,.3);border:1px solid var(--border);border-radius:12px;padding:.8rem;text-align:center;}
+.prize-box .pi{font-size:1.4rem;display:block;margin-bottom:3px;}
+.prize-box span{font-size:.7rem;color:var(--muted);font-weight:700;}
+
+.info-box{background:var(--og);border:1px solid rgba(255,140,0,.25);border-radius:14px;padding:1rem;font-size:.8rem;color:var(--orange);margin-bottom:1.2rem;display:flex;gap:10px;align-items:flex-start;line-height:1.55;}
+.info-box i{flex-shrink:0;margin-top:2px;font-size:1.1rem;}
+
+/* ── FORM ── */
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;}
+.field{margin-bottom:1rem;}
+.field label{display:block;font-size:.7rem;font-weight:800;text-transform:uppercase;color:var(--muted);margin-bottom:6px;letter-spacing:0.5px;}
+.field label .req{color:var(--orange);}
+.field input{width:100%;background:rgba(0,0,0,.4);border:1.5px solid var(--border);border-radius:12px;padding:14px 15px;color:var(--text);font-size:.95rem;outline:none;transition:.2s;}
+.field input:focus{border-color:var(--orange);background:rgba(255,140,0,.03);}
+.field input[readonly]{opacity:.6;cursor:not-allowed;}
+.field input.hl{border-color:rgba(255,140,0,.45);background:rgba(255,140,0,.03);}
+
+/* Improved Code Pair UI */
+.code-pair{background:linear-gradient(180deg, rgba(255,140,0,.05), rgba(0,0,0,0));border:1.5px solid rgba(255,140,0,.2);border-radius:18px;padding:1.2rem;margin-bottom:1.2rem;position:relative;}
+.code-pair-title{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:900;color:var(--orange);margin-bottom:1rem;display:flex;align-items:center;gap:8px;text-align:center;justify-content:center;}
+.code-divider{text-align:center;margin:0.5rem 0 1rem;position:relative;}
+.code-divider::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border);z-index:1;}
+.code-divider span{position:relative;background:var(--card);padding:0 10px;color:var(--muted);font-size:0.75rem;font-weight:800;z-index:2;border-radius:50px;border:1px solid var(--border);}
+
+.submit-btn{width:100%;padding:16px;background:var(--orange);color:#000;border:none;border-radius:14px;font-weight:900;font-size:1rem;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:0.5px;}
+.submit-btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 20px rgba(255,140,0,.3);}
+.submit-btn:disabled{background:#1e293b;color:var(--muted);transform:none;box-shadow:none;cursor:not-allowed;}
+
+/* ── HISTORY ── */
+.hist-item{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1rem;display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.hist-codes{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px;}
+.hist-codes code{background:rgba(255,140,0,.1);color:var(--orange);padding:4px 10px;border-radius:8px;font-size:.75rem;font-weight:700;}
+.sbadge{padding:4px 12px;border-radius:50px;font-size:.7rem;font-weight:800;text-transform:uppercase;white-space:nowrap;}
+.sp{background:rgba(255,140,0,.15);color:var(--orange);}
+.sw{background:rgba(0,204,136,.15);color:var(--green);}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:calc(var(--nav-h)+20px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--orange);color:var(--text);padding:12px 24px;border-radius:14px;font-weight:700;font-size:.85rem;z-index:999;opacity:0;transition:.3s;white-space:nowrap;pointer-events:none;max-width:92vw;text-align:center;}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+#toast.err{border-color:var(--red);}#toast.ok{border-color:var(--green);}
+
+/* ── BOTTOM NAV ── */
+.bnav{position:fixed;bottom:0;left:0;right:0;height:var(--nav-h);background:rgba(10,11,18,.98);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:center;z-index:200;}
+.nb{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;text-decoration:none;color:var(--muted);flex:1;}
+.nb i{font-size:1.15rem;}.nb span{font-size:.58rem;font-weight:700;text-transform:uppercase;}
+.nb.on{color:var(--orange);}
+
+/* ── RESPONSIVE ── */
+@media(max-width: 600px) {
+  .video-banner { flex-direction: column; text-align: center; }
+  .video-banner a { width: 100%; }
+}
+@media(min-width:900px){body{max-width:860px;margin:0 auto;}}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="logo">SPYRA<span>Z</span></div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="login.html" class="login-pill" id="loginBtn"><i class="fas fa-user"></i> Login</a>
+    <div class="user-pill" id="userPill"><div class="uav" id="uAvatar">S</div><span style="font-weight:800;font-size:.78rem;color:#fff;" id="uName">User</span><button class="logout-btn" onclick="doLogout()">⏻</button></div>
+  </div>
+</header>
+
+<div class="hero">
+  <span class="hero-emoji">🎁</span>
+  <h1>Monthly Giveaways</h1>
+  <p>Watch SpyraZ's video, find <strong style="color:var(--orange);">both codes</strong> hidden inside, and submit to win fruits & coins!</p>
+</div>
+
+<div class="video-banner">
+  <i class="fab fa-youtube"></i>
+  <div class="vb-text">
+    <strong>Watch the Giveaway Video First</strong>
+    <p>Both the Video Code and Secret Code are hidden inside. Watch carefully to find them!</p>
+  </div>
+  <a href="https://yt/spy" target="_blank" rel="noopener"><i class="fab fa-youtube"></i> Watch Video</a>
+</div>
+
+<div id="blockerSec" style="display:none;">
+  <div class="blocker"><i class="fas fa-lock"></i><h2>Login Required</h2><p>Login to enter the giveaway.</p><a href="login.html" class="btn-o"><i class="fas fa-sign-in-alt"></i> Login</a></div>
+</div>
+
+<div id="mainContent" style="display:none;">
+  <div class="tabs-row">
+    <button class="tabb on" onclick="switchTab('enter',this)">🎫 Enter Giveaway</button>
+    <button class="tabb" onclick="switchTab('history',this)">📋 My Entries</button>
+  </div>
+
+  <div id="tab-enter" class="sec">
+    <div class="steps-grid">
+      <div class="step-box"><span class="sn">1️⃣</span><span>Watch the video</span></div>
+      <div class="step-box"><span class="sn">2️⃣</span><span>Find both codes</span></div>
+      <div class="step-box"><span class="sn">3️⃣</span><span>Submit below</span></div>
+      <div class="step-box"><span class="sn">4️⃣</span><span>Wait for winner!</span></div>
+    </div>
+    
+    <div class="info-box">
+      <i class="fas fa-circle-info"></i>
+      <span>You must submit <strong>both codes together</strong>. The <strong>Video Code</strong> appears on screen. The <strong>Secret Code</strong> is hidden somewhere in the video, description, or pinned comment.</span>
+    </div>
+
+    <div class="form-card">
+      <div class="field"><label>Your SpyraZ Username</label><input type="text" id="fUsername" readonly></div>
+      <div class="field"><label>Your Roblox ID</label><input type="text" id="fRoblox" readonly></div>
+      
+      <div class="code-pair">
+        <div class="code-pair-title"><i class="fas fa-key"></i> Code Verification</div>
+        <div class="field">
+          <label>📹 Video Code <span class="req">*</span></label>
+          <input type="text" id="fVideoCode" class="hl" placeholder="Code shown on screen..." autocomplete="off">
+        </div>
+        
+        <div class="code-divider"><span>AND</span></div>
+        
+        <div class="field">
+          <label>🔒 Secret Code <span class="req">*</span></label>
+          <input type="text" id="fSecretCode" class="hl" placeholder="Hidden code (description/comment)..." autocomplete="off" oninput="this.value=this.value.toUpperCase()">
+        </div>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitEntry()">
+        <i class="fas fa-paper-plane"></i> SUBMIT ENTRY
+      </button>
+    </div>
+  </div>
+
+  <div id="tab-history" class="sec" style="display:none;">
+    <div id="historyList"><p style="text-align:center;color:var(--muted);padding:2rem;">No entries yet.</p></div>
+  </div>
+</div>
+
+<nav class="bnav">
+  <a href="index.html" class="nb"><i class="fas fa-house"></i><span>Home</span></a>
+  <a href="giveaway.html" class="nb on"><i class="fas fa-gift"></i><span>Win</span></a>
+  <a href="spin.html" class="nb"><i class="fas fa-rotate"></i><span>Spin</span></a>
+  <a href="chat.html" class="nb"><i class="fas fa-comment-dots"></i><span>Chat</span></a>
+  <a href="market.html" class="nb"><i class="fas fa-shop"></i><span>Market</span></a>
+  <a href="trade.html" class="nb"><i class="fas fa-repeat"></i><span>Trade</span></a>
+  <a href="sell.html" class="nb"><i class="fas fa-sack-dollar"></i><span>Sell</span></a>
+</nav>
+<div id="toast"></div>
+
+<script>
+(function(){var C=[['https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js','https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js','https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js'],['https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/app.min.js','https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/auth.min.js','https://cdn.jsdelivr.net/npm/firebase@9.23.0/compat/database.min.js'],['https://unpkg.com/firebase@9.23.0/compat/app.js','https://unpkg.com/firebase@9.23.0/compat/auth.js','https://unpkg.com/firebase@9.23.0/compat/database.js']];
+function ls(u){return new Promise(function(r,j){var s=document.createElement('script');s.src=u;s.onload=r;s.onerror=j;document.head.appendChild(s);});}
+function lc(i){if(i>=C.length)return;ls(C[i][0]).then(function(){return ls(C[i][1]);}).then(function(){return ls(C[i][2]);}).then(function(){window._fbReady=true;document.dispatchEvent(new Event('fbReady'));}).catch(function(){lc(i+1);});}lc(0);})();
+</script>
+<script>
+var db,auth,myUid,myData={};
+
+function toast(m,t){
+  var el=document.getElementById('toast');
+  el.textContent=m;
+  el.className='on '+(t||'');
+  clearTimeout(el._t);
+  el._t=setTimeout(function(){el.className='';},3200);
+}
+
+function switchTab(n,btn){
+  ['enter','history'].forEach(function(t){document.getElementById('tab-'+t).style.display='none';});
+  document.querySelectorAll('.tabb').forEach(function(b){b.classList.remove('on');});
+  document.getElementById('tab-'+n).style.display='block'; 
+  btn.classList.add('on');
+  if(n==='history') loadHistory();
+}
+
+function escH(t){
+  var d=document.createElement('div');
+  d.appendChild(document.createTextNode(t||''));
+  return d.innerHTML;
+}
+
+// ── Submit Logic ──
+async function submitEntry(){
+  var vc = document.getElementById('fVideoCode').value.trim();
+  var sc = document.getElementById('fSecretCode').value.trim().toUpperCase();
+  
+  if(!vc){toast('Enter the Video Code from the video!','err');return;}
+  if(!sc){toast('Enter the Secret Code too!','err');return;}
+  
+  var btn=document.getElementById('submitBtn');
+  btn.disabled=true; 
+  btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Checking...';
+  
+  try{
+    // Check secret code valid
+    var secSnap=await db.ref('secretCodes/'+sc).once('value');
+    if(!secSnap.exists()){
+      toast('❌ Secret Code not found! Watch the video again.','err');
+      resetBtn(btn);
+      return;
+    }
+    
+    var cd=secSnap.val();
+    
+    // Check max uses - count how many UIDs have redeemed this specific code
+    if(cd.maxUses){
+      var useSnap=await db.ref('codeRedemptions').once('value');
+      var useCount=0;
+      if(useSnap.exists()){
+        useSnap.forEach(function(userNode){
+          if(userNode.child(sc).exists()) useCount++;
+        });
+      }
+      if(useCount >= cd.maxUses){
+        toast('This code has reached max uses!','err');
+        resetBtn(btn);
+        return;
+      }
+    }
+    
+    // Check already redeemed by this user
+    var rdSnap=await db.ref('codeRedemptions/'+myUid+'/'+sc).once('value');
+    if(rdSnap.exists()){
+      toast('You already used this secret code!','err');
+      resetBtn(btn);
+      return;
+    }
+    
+    // Check duplicate video code for this user
+    var dupSnap=await db.ref('giveaways').orderByChild('uid').equalTo(myUid).once('value');
+    if(dupSnap.exists()){
+      var dup=false;
+      dupSnap.forEach(function(c){if(c.val().videoCode===vc) dup=true;});
+      if(dup){
+        toast('You already submitted this video code!','err');
+        resetBtn(btn);
+        return;
+      }
+    }
+    
+    // All good — write
+    var entryKey=db.ref('giveaways').push().key;
+    var updates={};
+    updates['giveaways/'+entryKey]={
+      uid:myUid, 
+      username:myData.username, 
+      robloxId:myData.robloxId, 
+      videoCode:vc, 
+      secretCode:sc, 
+      reward:cd.reward||'pending', 
+      status:'pending', 
+      timestamp:Date.now()
+    };
+    
+    updates['codeRedemptions/'+myUid+'/'+sc]={
+      uid:myUid, 
+      username:myData.username, 
+      robloxId:myData.robloxId, 
+      code:sc, 
+      timestamp:Date.now(), 
+      reward:cd.reward||'none'
+    };
+    
+    if(cd.reward==='coins' && cd.amount){
+      var csSnap=await db.ref('users/'+myUid+'/coils').once('value');
+      updates['users/'+myUid+'/coils']=(csSnap.val()||0)+cd.amount;
+    }
+    
+    if(cd.reward==='spy'){
+      updates['pendingRewards/'+myUid+'_'+Date.now()]={
+        uid:myUid, 
+        username:myData.username, 
+        robloxId:myData.robloxId, 
+        reward:'spy', 
+        secretCode:sc, 
+        status:'pending', 
+        timestamp:Date.now()
+      };
+    }
+    
+    await db.ref().update(updates);
+    
+    var msg='🎉 Entry submitted! Good luck!';
+    if(cd.reward==='coins' && cd.amount) msg='🪙 Entry done! +'+cd.amount+' coins added instantly!';
+    if(cd.reward==='spy') msg='🕵️ Entry done! Spy Fruit queued — admin delivers in 48h!';
+    
+    toast(msg,'ok');
+    document.getElementById('fVideoCode').value='';
+    document.getElementById('fSecretCode').value='';
+    
+  }catch(e){
+    toast('Error: '+e.message,'err');
+  }
+  
+  resetBtn(btn);
+}
+
+function resetBtn(btn) {
+  btn.disabled = false; 
+  btn.innerHTML = '<i class="fas fa-paper-plane"></i> SUBMIT ENTRY';
+}
+
+function loadHistory(){
+  var list=document.getElementById('historyList');
+  list.innerHTML='<p style="text-align:center;color:var(--muted);padding:2rem;">Loading...</p>';
+  db.ref('giveaways').orderByChild('uid').equalTo(myUid).once('value',function(s){
+    if(!s.exists()){
+      list.innerHTML='<p style="text-align:center;color:var(--muted);padding:2rem;">No entries yet. Watch the video and submit!</p>';
+      return;
+    }
+    
+    list.innerHTML=''; 
+    var items=[];
+    s.forEach(function(c){items.unshift(c.val());});
+    
+    items.forEach(function(e){
+      var sc = e.status==='winner' ? 'sw' : 'sp';
+      var st = e.status==='winner' ? '🏆 Winner' : '⏳ Pending';
+      list.innerHTML+='<div class="hist-item"><div>'+
+        '<strong style="font-size:.9rem;display:block;">Giveaway Entry</strong>'+
+        '<div class="hist-codes"><code>📹 '+escH(e.videoCode)+'</code><code>🔒 '+escH(e.secretCode||'—')+'</code></div>'+
+        '<span style="font-size:.75rem;color:var(--muted);display:block;margin-top:4px;">'+new Date(e.timestamp).toLocaleDateString()+'</span>'+
+        '</div><span class="sbadge '+sc+'">'+st+'</span></div>';
+    });
+  });
+}
+
+function bootApp(){
+  firebase.initializeApp({apiKey:"AIzaSyBvRRGp7Di6QK6LvbLIl8jyalkYmUkYISw",authDomain:"spyraz-4d24e.firebaseapp.com",databaseURL:"https://spyraz-4d24e-default-rtdb.firebaseio.com/",projectId:"spyraz-4d24e",storageBucket:"spyraz-4d24e.firebasestorage.app",messagingSenderId:"533558439070",appId:"1:533558439070:web:382971879027a158ad9f8f"});
+  auth=firebase.auth(); db=firebase.database();
+  
+  auth.onAuthStateChanged(function(user){
+    if(user){
+      myUid=user.uid;
+      document.getElementById('loginBtn').style.display='none';
+      document.getElementById('userPill').style.display='flex';
+      document.getElementById('blockerSec').style.display='none';
+      document.getElementById('mainContent').style.display='block';
+      
+      db.ref('users/'+myUid).on('value',function(s){
+        if(!s.exists())return; 
+        myData=s.val();
+        document.getElementById('uName').textContent=myData.username||'User';
+        document.getElementById('uAvatar').textContent=(myData.username||'U').charAt(0).toUpperCase();
+        document.getElementById('fUsername').value=myData.username||'';
+        document.getElementById('fRoblox').value=myData.robloxId||'';
+      });
+    }else{
+      document.getElementById('loginBtn').style.display='flex';
+      document.getElementById('userPill').style.display='none';
+      document.getElementById('blockerSec').style.display='block';
+      document.getElementById('mainContent').style.display='none';
+    }
+  });
+}
+if(window._fbReady){bootApp();}else{document.addEventListener('fbReady',bootApp);}
+function doLogout(){firebase.auth().signOut().then(function(){window.location.href='login.html';});}
+</script>
+</body>
+</html>
