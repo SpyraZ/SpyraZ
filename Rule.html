@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ImShadowOP | Server Rules</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0f0717;
+            --card-bg: #1d112b;
+            --accent-pink: #ff52b0;
+            --accent-purple: #9d4edd;
+            --text-main: #f3eef7;
+            --text-muted: #bfaec6;
+            --discord-color: #5865F2;
+            --youtube-color: #FF0000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        /* Banner Styling */
+        .banner-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, rgba(0,0,0,0) 60%, var(--bg-color) 100%);
+        }
+
+        .banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            z-index: -1;
+        }
+
+        /* Profile/Icon Styling */
+        .header-content {
+            max-width: 1000px;
+            margin: -90px auto 30px auto;
+            padding: 0 20px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .server-icon {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 4px solid var(--accent-pink);
+            box-shadow: 0 0 20px rgba(255, 82, 176, 0.6);
+            object-fit: cover;
+            background-color: var(--card-bg);
+        }
+
+        .server-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-top: 15px;
+            background: linear-gradient(to right, #fff, var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .server-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-top: 5px;
+        }
+
+        /* Action Buttons */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 28px;
+            border-radius: 30px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-discord {
+            background-color: var(--discord-color);
+            box-shadow: 0 4px 15px rgba(88, 101, 242, 0.4);
+        }
+
+        .btn-discord:hover {
+            box-shadow: 0 6px 20px rgba(88, 101, 242, 0.6);
+        }
+
+        .btn-youtube {
+            background-color: var(--youtube-color);
+            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.4);
+        }
+
+        .btn-youtube:hover {
+            box-shadow: 0 6px 20px rgba(255, 0, 0, 0.6);
+        }
+
+        /* Rules Layout */
+        .main-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .rule-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            transition: border-color 0.3s, transform 0.3s;
+        }
+
+        .rule-card:hover {
+            border-color: var(--accent-pink);
+            transform: scale(1.02);
+        }
+
+        .rule-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .rule-number {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-pink);
+            background: rgba(255, 82, 176, 0.1);
+            padding: 4px 12px;
+            border-radius: 8px;
+            margin-right: 12px;
+        }
+
+        .rule-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .rule-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Quote / Footer Panel */
+        .footer-quote {
+            text-align: center;
+            max-width: 700px;
+            margin: 50px auto 20px auto;
+            padding: 20px;
+            background: linear-gradient(90deg, rgba(157, 78, 221, 0.1), rgba(255, 82, 176, 0.1));
+            border-left: 4px solid var(--accent-pink);
+            border-radius: 4px;
+            font-style: italic;
+            color: #e2d5ec;
+        }
+
+        /* Responsive Tweaks */
+        @media (max-width: 768px) {
+            .banner-container { height: 200px; }
+            .header-content { margin-top: -70px; }
+            .server-icon { width: 130px; height: 130px; }
+            .server-title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="banner-container">
+        <img src="https://cdn.discordapp.com/attachments/1521837914810748975/1521856462727417999/content.png?ex=6a465ac7&is=6a450947&hm=f9c6a557cec215e99992008646c04340c1f3f52f6bd009a5d9d91a096cf000e1&" alt="Server Banner" class="banner-img">
+    </div>
+
+    <div class="header-content">
+        <img src="https://cdn.discordapp.com/attachments/1521837914810748975/1521851094920073236/content.png?ex=6a4655c7&is=6a450447&hm=a3e123dfff6ee5378a72f641bfa3947c67b43faa3fc7e3bad84347ebd2cfbf64&" alt="Server Icon" class="server-icon">
+        <h1 class="server-title">Welcome to the Server</h1>
+        <p class="server-subtitle">Please review our community guidelines below to ensure a safe and fun environment for everyone.</p>
+        
+        <div class="social-links">
+            <a href="https://discord.gg/6myxfaYRJK" target="_blank" class="btn btn-discord">
+                Join Our Discord
+            </a>
+            <a href="https://www.youtube.com/@imshadowop" target="_blank" class="btn btn-youtube">
+                Subscribe on YouTube
+            </a>
+        </div>
+    </div>
+
+    <main class="main-container">
+        <div class="rules-grid">
+            
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-number">1</span>
+                    <h3 class="rule-title">Be Respectful</h3>
+                </div>
+                <p class="rule-desc">Treat everyone with kindness. Bullying, harassment, or toxicity of any kind will not be tolerated.</p>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-number">2</span>
+                    <h3 class="rule-title">No Spamming</h3>
+                </div>
+                <p class="rule-desc">Avoid flooding chat channels with excessive messages, emojis, images, or mentions. Keep the chat readable.</p>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-number">3</span>
+                    <h3 class="rule-title">Keep It Appropriate</h3>
+                </div>
+                <p class="rule-desc">Ensure all conversations and media remain safe for a general audience. No offensive or inappropriate content.</p>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-number">4</span>
+                    <h3 class="rule-title">Follow Discord Rules</h3>
+                </div>
+                <p class="rule-desc">Respect and abide by all official Discord Community Guidelines and Terms of Service.</p>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-number">5</span>
+                    <h3 class="rule-title">No Hate Speech</h3>
+                </div>
+                <p class="rule-desc">Discrimination, racism, sexism, or hate speech targeting any group or individual is strictly forbidden.</p>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-number">6</span>
+                    <h3 class="rule-title">No Advertising</h3>
+                </div>
+                <p class="rule-desc">Do not promote other Discord servers, social media links, or products without explicit permission from the staff.</p>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-number">7</span>
+                    <h3 class="rule-title">Use Channels Properly</h3>
+                </div>
+                <p class="rule-desc">Keep your conversations relevant to the specific topic of each channel.</p>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-number">8</span>
+                    <h3 class="rule-title">No Fake Information</h3>
+                </div>
+                <p class="rule-desc">Do not spread rumors, misinformation, or lies that could cause confusion or drama in the community.</p>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-number">9</span>
+                    <h3 class="rule-title">Respect Admins & Mods</h3>
+                </div>
+                <p class="rule-desc">Follow instructions given by the staff. If you have an issue with a decision, DM a moderator privately.</p>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-number">10</span>
+                    <h3 class="rule-title">Keep Language Clean</h3>
+                </div>
+                <p class="rule-desc">Avoid excessive swearing or coarse language to ensure the environment remains welcoming to everyone.</p>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-number">11</span>
+                    <h3 class="rule-title">No NSFW Content</h3>
+                </div>
+                <p class="rule-desc">Not Safe For Work (NSFW) material, including explicit text or media, is completely banned.</p>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-number">12</span>
+                    <h3 class="rule-title">Protect Privacy</h3>
+                </div>
+                <p class="rule-desc">Do not share anyone’s personal information, real names, or private photos without their explicit consent.</p>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-number">13</span>
+                    <h3 class="rule-title">No Impersonation</h3>
+                </div>
+                <p class="rule-desc">Do not pretend to be other members, staff, or public figures by copying their usernames or avatars.</p>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-number">14</span>
+                    <h3 class="rule-title">Stay Positive</h3>
+                </div>
+                <p class="rule-desc">Help maintain a friendly and constructive community. Treat others the way you want to be treated.</p>
+            </div>
+
+            <div class="rule-card">
+                <div class="rule-header">
+                    <span class="rule-number">15</span>
+                    <h3 class="rule-title">Follow All Rules</h3>
+                </div>
+                <p class="rule-desc">Breaking these guidelines will result in moderation actions, which may include mutes, kicks, or permanent bans.</p>
+            </div>
+
+        </div>
+
+        <div class="footer-quote">
+            "RULES are not a burden. It’s a way of manner to Respect others and live Peacefully."
+        </div>
+    </main>
+
+</body>
+</html>
